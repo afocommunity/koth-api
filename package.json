@@ -2,7 +2,11 @@
 	"name": "koth-api",
 	"dependencies": {
 		"@paralleldrive/cuid2": "^2.2.2",
+		"colors": "^1.4.0",
+		"compression": "^1.8.0",
+		"cors": "^2.8.5",
 		"express": "^5.1.0",
+		"morgan": "^1.10.0",
 		"reflect-metadata": "^0.2.2",
 		"sequelize": "^6.37.7",
 		"sequelize-typescript": "^2.1.6",

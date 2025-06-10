@@ -1,5 +1,5 @@
 import 'dotenv/config';
 import 'reflect-metadata';
 
-import { createServer } from './server';
+import { createServer } from './createServer';
 createServer();
