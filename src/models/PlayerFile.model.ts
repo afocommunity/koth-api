@@ -1,5 +1,5 @@
 import {
-  HasManyAddAssociationsMixin,
+  CreationOptional,
   HasManyGetAssociationsMixin,
   HasManySetAssociationsMixin,
   InferAttributes,
@@ -12,15 +12,19 @@ import {
   HasMany,
   Model,
   PrimaryKey,
+  Scopes,
   Table,
   Unique,
 } from "sequelize-typescript";
 import { LoadoutItem } from "./LoadoutItem.model";
 
+@Scopes(() => ({
+  loadout: { include: { model: LoadoutItem, as: "Loadout" } },
+}))
 @Table({ timestamps: true })
-export class Player extends Model<
-  InferAttributes<Player>,
-  InferCreationAttributes<Player>
+export class PlayerFile extends Model<
+  InferAttributes<PlayerFile>,
+  InferCreationAttributes<PlayerFile>
 > {
   @PrimaryKey
   @Column(DataType.STRING(17))
@@ -54,7 +58,10 @@ export class Player extends Model<
   declare version: string;
 
   @HasMany(() => LoadoutItem)
-  loadout: NonAttribute<Awaited<LoadoutItem>>;
+  Loadout: NonAttribute<Awaited<LoadoutItem>>;
   getLoadouts: HasManyGetAssociationsMixin<Awaited<LoadoutItem>>;
   setLoadouts: HasManySetAssociationsMixin<Awaited<LoadoutItem>, string>;
+
+  declare readonly createdAt: CreationOptional<Date>;
+  declare readonly updatedAt: CreationOptional<Date>;
 }
