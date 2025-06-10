@@ -1,3 +1,3 @@
 import { init } from '@paralleldrive/cuid2';
 
-export const createId = init()
+export const createId = init();
