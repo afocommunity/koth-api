@@ -81,6 +81,12 @@ export const up: Migration = async ({ context: sequelize }) => {
 			type: DataType.STRING(),
 			allowNull: true,
 		},
+		createdAt: {
+			type: DataType.DATE(),
+		},
+		updatedAt: {
+			type: DataType.DATE(),
+		},
 	});
 	await sequelize.createTable('player_loadouts', {
 		id: {

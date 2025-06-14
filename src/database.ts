@@ -9,7 +9,7 @@ const DB_PORT = process.env.DB_PORT;
 
 export const sequelize = new Sequelize({
 	database: DB_DATABASE,
-	dialect: DB_DIALECT as 'mariadb',
+	dialect: DB_DIALECT as 'mysql' | 'mariadb' | 'postgres',
 	host: DB_HOST,
 	modelMatch: (file, member) => {
 		console.info(`Declaring model ${member} from ${file}`);
@@ -17,6 +17,6 @@ export const sequelize = new Sequelize({
 	},
 	models: [__dirname + '/models/**/*.model.ts'],
 	password: DB_PASSWORD,
-	port: DB_PORT != null ? Number(DB_PORT) : void 0,
+	port: DB_PORT != null ? Number(DB_PORT) : null,
 	username: DB_USER,
 });
