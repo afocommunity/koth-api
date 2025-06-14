@@ -12,8 +12,8 @@ import {
 } from 'sequelize-typescript';
 import { PlayerSave } from './PlayerSave.model';
 
-@Table({ timestamps: false, tableName: 'player_loadouts' })
-export class LoadoutItem extends Model {
+@Table({ timestamps: false, tableName: 'player_perma_unlocks' })
+export class PermaUnlocks extends Model {
 	@PrimaryKey
 	@Default(createId)
 	@Column(DataType.STRING(24))
@@ -26,11 +26,5 @@ export class LoadoutItem extends Model {
 	declare readonly PlayerSave: NonAttribute<Awaited<PlayerSave>>;
 
 	@Column(DataType.STRING)
-	declare family_name: string;
-	@Column(DataType.STRING)
-	declare item: string;
-	@Column(DataType.INTEGER)
-	declare slot: number;
-	@Column(DataType.INTEGER)
-	declare item_count: number;
+	declare unlock_name: string;
 }
