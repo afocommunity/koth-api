@@ -1,0 +1,32 @@
+volumes:
+  koth-data:
+services:
+  koth-db:
+    container_name: koth-db
+    restart: always
+    profiles:
+      - local
+    image: postgres:17
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U koth-user -d koth-data']
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    environment:
+      POSTGRES_DB: koth-data
+      POSTGRES_USER: koth-user
+      POSTGRES_PASSWORD: koth-password
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'
+    volumes:
+      - koth-data:/var/lib/postgresql/data
+  adminer:
+    container_name: koth-adminer
+    image: adminer
+    restart: always
+    profiles:
+      - local
+    ports:
+      - 8282:8080
