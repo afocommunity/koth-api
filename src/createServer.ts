@@ -36,6 +36,7 @@ export const createServer = async () => {
 			res: Response,
 			_next: NextFunction,
 		) => {
+			console.log('e', data);
 			if (data instanceof DTO) {
 				res.status(data.status).json(data);
 				return;

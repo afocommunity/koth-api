@@ -12,7 +12,17 @@ export class PlayerController {
 	) {
 		const player_id = req.params.player_id;
 		const id_type = IdType.parse(req.query.by);
-		const scope = PlayerScope.parse(req.query.include);
+		const scope = Array.from(
+			new Set(
+				PlayerScope.parse(
+					req.query.include != null
+						? typeof req.query.include === 'string'
+							? req.query.include.split(',')
+							: req.query.include
+						: null,
+				),
+			),
+		);
 		switch (id_type) {
 			case 'native':
 				return next(await PlayerController.getPlayerByID(player_id, scope));
