@@ -5,14 +5,14 @@ import { Player } from '@/models/Player.model';
 import { DTO } from '@/utils/DTO';
 
 export class PlayerController {
-	public static async findPlayer(
+	public static async reqFindPlayer(
 		req: Request,
 		_res: Response,
 		next: NextFunction,
 	) {
 		const player_id = req.params.player_id;
 		const id_type = IdType.parse(req.query.by);
-		const scope = Array.from(
+		const include = Array.from(
 			new Set(
 				PlayerScope.parse(
 					req.query.include != null
@@ -25,23 +25,25 @@ export class PlayerController {
 		);
 		switch (id_type) {
 			case 'native':
-				return next(await PlayerController.getPlayerByID(player_id, scope));
+				return next(await PlayerController.getPlayerByID(player_id, include));
 			case 'steam':
-				return next(await PlayerController.getPlayerBySteam(player_id, scope));
+				return next(await PlayerController.getPlayerBySteam(player_id, include));
 			case 'eos':
-				return next(await PlayerController.getPlayerByEOS(player_id, scope));
+				return next(await PlayerController.getPlayerByEOS(player_id, include));
 		}
 	}
-	private static async getPlayerByID(id: string, scope = ['savefile']) {
-		const player = await Player.scope(scope).findOne({ where: { id } });
+	public static async getPlayerByID(id: string, include = ['savefile']) {
+		const player = await Player.scope(include).findOne({ where: { id } });
 		return new DTO(player, player != null ? 200 : 404);
 	}
-	private static async getPlayerByEOS(id: string, scope = ['savefile']) {
-		const player = await Player.scope(scope).findOne({ where: { eos_id: id } });
+	public static async getPlayerByEOS(id: string, include = ['savefile']) {
+		const player = await Player.scope(include).findOne({
+			where: { eos_id: id },
+		});
 		return new DTO(player, player != null ? 200 : 404);
 	}
-	private static async getPlayerBySteam(id: string, scope = ['savefile']) {
-		const player = await Player.scope(scope).findOne({
+	public static async getPlayerBySteam(id: string, include = ['savefile']) {
+		const player = await Player.scope(include).findOne({
 			where: { steam_id: id },
 		});
 		return new DTO(player, player != null ? 200 : 404);

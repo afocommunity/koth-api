@@ -15,7 +15,7 @@ import {
 	Table,
 	Unique,
 } from 'sequelize-typescript';
-import { createId } from '@paralleldrive/cuid2';
+import { createId } from '@/utils/createId';
 import { PlayerSave } from './PlayerSave.model';
 import { NonAttribute } from 'sequelize';
 import { LoadoutItem } from './LoadoutItem.model';
