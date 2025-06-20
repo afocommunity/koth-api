@@ -25,7 +25,7 @@ checkEnvar('DB_DATABASE', false);
 checkEnvar('DISCORD_TOKEN', true);
 
 if (failed) {
-	throw 'Missing required envar';
+	throw new Error('Missing required envar');
 }
 
 createServer();

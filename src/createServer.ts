@@ -54,7 +54,6 @@ export const createServer = async () => {
 						? data
 						: new Error('internal server error'),
 				);
-			return;
 		},
 	);
 
