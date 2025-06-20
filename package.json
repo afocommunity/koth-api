@@ -1,10 +1,10 @@
 {
 	"name": "koth-api",
-  "private": true,
+	"private": true,
 	"dependencies": {
 		"@paralleldrive/cuid2": "2.2.2",
 		"bufferutil": "4.0.9",
-		"colors": "1.4.0",
+		"colors": "^1.4.0",
 		"compression": "1.8.0",
 		"cors": "2.8.5",
 		"discord.js": "14.20.0",

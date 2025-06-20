@@ -1,4 +1,4 @@
-import { migrator } from './migrator';
+import { createMigrator } from './migrator';
 import express, {
 	json,
 	Request,
@@ -15,6 +15,7 @@ import { DTO } from './utils/DTO';
 const FRONTEND_HOST = process.env.FRONTEND_HOST ?? 'http://localhost:3000';
 const EXPRESS_PORT = process.env.EXPRESS_PORT ?? 3030;
 export const createServer = async () => {
+	const migrator = createMigrator();
 	await migrator.up();
 	const app = express();
 

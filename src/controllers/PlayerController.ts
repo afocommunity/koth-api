@@ -27,7 +27,9 @@ export class PlayerController {
 			case 'native':
 				return next(await PlayerController.getPlayerByID(player_id, include));
 			case 'steam':
-				return next(await PlayerController.getPlayerBySteam(player_id, include));
+				return next(
+					await PlayerController.getPlayerBySteam(player_id, include),
+				);
 			case 'eos':
 				return next(await PlayerController.getPlayerByEOS(player_id, include));
 		}
