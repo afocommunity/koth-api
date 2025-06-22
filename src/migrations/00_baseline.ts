@@ -139,6 +139,21 @@ export const up: Migration = async ({ context: sequelize }) => {
 			type: DataType.STRING(),
 		},
 	});
+	await sequelize.createTable('api_tokens', {
+		id: {
+			type: DataType.STRING(26),
+			primaryKey: true,
+		},
+		org_id: {
+			type: DataType.STRING(26),
+		},
+		server_id: {
+			type: DataType.STRING(26),
+		},
+		expiresAt: {
+			type: DataType.DATE(),
+		},
+	});
 };
 export const down: Migration = async ({ context: sequelize }) => {
 	await sequelize.dropTable('player_loadouts');
@@ -146,4 +161,5 @@ export const down: Migration = async ({ context: sequelize }) => {
 	await sequelize.dropTable('player_weapon_xp');
 	await sequelize.dropTable('player_perma_unlocks');
 	await sequelize.dropTable('players');
+	await sequelize.dropTable('api_tokens');
 };

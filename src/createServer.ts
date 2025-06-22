@@ -12,6 +12,7 @@ import compression from 'compression';
 import { routing } from './routes';
 import { ZodError } from 'zod';
 import { DTO } from './utils/DTO';
+import { AuthMiddleware } from './middleware/Auth';
 const FRONTEND_HOST = process.env.FRONTEND_HOST ?? 'http://localhost:3000';
 const EXPRESS_PORT = process.env.EXPRESS_PORT ?? 3030;
 export const createServer = async () => {
@@ -27,6 +28,7 @@ export const createServer = async () => {
 	app.disable('x-powered-by');
 	app.use(json());
 	app.use(urlencoded({ extended: true }));
+	app.use(AuthMiddleware.configureRequest);
 	app.use(routing);
 
 	//? Handling

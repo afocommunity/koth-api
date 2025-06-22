@@ -7,7 +7,7 @@ export const players = express.Router();
 players.get(
 	'/:player_id',
 	asyncHandler(
-		AuthMiddleware.bearerTokenAuth('PLAYERS:GET'),
+		AuthMiddleware.bearerTokenAuth(),
 		PlayerController.reqFindPlayer,
 	),
 );
