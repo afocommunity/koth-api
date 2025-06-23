@@ -14,6 +14,7 @@ import { ZodError } from 'zod';
 import { DTO } from './utils/DTO';
 import { AuthMiddleware } from './middleware/Auth';
 import { AuthController } from './controllers/AuthController';
+import { DiscordController } from './controllers/DiscordController';
 const FRONTEND_HOST = process.env.FRONTEND_HOST ?? 'http://localhost:3000';
 const EXPRESS_PORT = process.env.EXPRESS_PORT ?? 3030;
 export const createServer = async () => {
@@ -33,6 +34,8 @@ export const createServer = async () => {
 	app.use(routing);
 	//? Cron Jobs
 	AuthController.setupCron();
+	//? Misc Setup
+	await DiscordController.setup();
 	//? Handling
 	app.use(
 		(
