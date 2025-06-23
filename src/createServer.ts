@@ -13,6 +13,7 @@ import { routing } from './routes';
 import { ZodError } from 'zod';
 import { DTO } from './utils/DTO';
 import { AuthMiddleware } from './middleware/Auth';
+import { AuthController } from './controllers/AuthController';
 const FRONTEND_HOST = process.env.FRONTEND_HOST ?? 'http://localhost:3000';
 const EXPRESS_PORT = process.env.EXPRESS_PORT ?? 3030;
 export const createServer = async () => {
@@ -30,7 +31,8 @@ export const createServer = async () => {
 	app.use(urlencoded({ extended: true }));
 	app.use(AuthMiddleware.configureRequest);
 	app.use(routing);
-
+	//? Cron Jobs
+	AuthController.setupCron();
 	//? Handling
 	app.use(
 		(
@@ -58,7 +60,6 @@ export const createServer = async () => {
 				);
 		},
 	);
-
 	app.listen(EXPRESS_PORT, () =>
 		console.info(`Listening on port ${EXPRESS_PORT}`),
 	);

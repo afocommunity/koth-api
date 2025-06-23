@@ -3,7 +3,15 @@ import { createId } from '@/utils/createId';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import ms from 'ms';
 import { Op } from 'sequelize';
+import { CronController } from './CronController';
 export class AuthController {
+	public static async setupCron() {
+		CronController.addCron(
+			'clear_expired_tokens',
+			'0 30 * * * *',
+			AuthController.destroyExpiredTokens,
+		);
+	}
 	public static async decodeAuthToken(token: string) {
 		let decoded!: string | JwtPayload;
 		try {
@@ -43,12 +51,12 @@ export class AuthController {
 		return { tokenModel, token };
 	}
 
-	async invalidateApiToken(token_id: string) {
+	public static async invalidateApiToken(token_id: string) {
 		const destroyed = await ApiToken.destroy({ where: { id: token_id } });
 		return Boolean(destroyed);
 	}
 
-	async destroyExpiredTokens() {
+	public static async destroyExpiredTokens() {
 		const now = Date.now();
 		const expiringTokens = await ApiToken.findAll({
 			where: { expiresAt: { [Op.gte]: now } },
