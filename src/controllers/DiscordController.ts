@@ -1,9 +1,15 @@
 import {
 	ActivityType,
+	CacheType,
+	ChatInputCommandInteraction,
 	Client,
 	Events,
 	GatewayIntentBits,
+	Interaction,
+	MessageContextMenuCommandInteraction,
 	PresenceUpdateStatus,
+	PrimaryEntryPointCommandInteraction,
+	UserContextMenuCommandInteraction,
 } from 'discord.js';
 
 let client: Client;
@@ -36,22 +42,38 @@ export class DiscordController {
 			intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages],
 		});
 		client.login(process.env.DISCORD_TOKEN);
+		client.once(Events.ClientReady, DiscordController.onReady);
+		client.on(Events.InteractionCreate, DiscordController.onInteraction);
+	}
 
-		client.once(Events.ClientReady, () => {
-			isReady = true;
-			resolve(true);
-			console.info('[DISCORD] Client Ready');
-			client.user.setPresence({
-				status: PresenceUpdateStatus.Online,
-				activities: [
-					{
-						name: 'King of the Hill',
-						type: ActivityType.Custom,
-						url: 'https://discord.gg/kingofthehill',
-						state: 'Capturing the Point',
-					},
-				],
-			});
+	public static async onInteraction(interaction: Interaction<CacheType>) {
+		if (interaction.isCommand()) {
+			return DiscordController.onCommand(interaction);
+		}
+		// ¯\_(ツ)_/¯ - Uh oh
+	}
+	public static async onCommand(
+		_interaction:
+			| ChatInputCommandInteraction<CacheType>
+			| MessageContextMenuCommandInteraction<CacheType>
+			| UserContextMenuCommandInteraction<CacheType>
+			| PrimaryEntryPointCommandInteraction<CacheType>,
+	) {}
+
+	public static async onReady() {
+		isReady = true;
+		resolve(true);
+		console.info('[DISCORD] Client Ready');
+		client.user.setPresence({
+			status: PresenceUpdateStatus.Online,
+			activities: [
+				{
+					name: 'King of the Hill',
+					type: ActivityType.Custom,
+					url: 'https://discord.gg/kingofthehill',
+					state: 'Capturing the Point',
+				},
+			],
 		});
 	}
 }
