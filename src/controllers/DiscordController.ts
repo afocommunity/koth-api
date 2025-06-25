@@ -1,5 +1,5 @@
 import { BaseCommand } from '@/commands/BaseCommand';
-import { CreateCMD } from '@/commands/CreateCMD';
+import { green, red, yellow } from 'colors';
 import {
 	ActivityType,
 	AnySelectMenuInteraction,
@@ -20,6 +20,8 @@ import {
 	SlashCommandBuilder,
 	UserContextMenuCommandInteraction,
 } from 'discord.js';
+import fs from 'node:fs';
+import path from 'node:path';
 
 let client: Client;
 let isReady = false;
@@ -71,7 +73,6 @@ export class DiscordController {
 	public static async onSelect(interaction: AnySelectMenuInteraction) {
 		//TODO: Rework this to be modular
 		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-		console.log(interaction);
 		const resp = new ContainerBuilder().addTextDisplayComponents((text) =>
 			text.setContent(`You selected ${interaction.values.join(',')}`),
 		);
@@ -98,7 +99,7 @@ export class DiscordController {
 	public static async onReady() {
 		isReady = true;
 		resolve(true);
-		console.info('[DISCORD] Client Ready');
+		console.info(green('Discord Client Ready'));
 		client.user.setPresence({
 			status: PresenceUpdateStatus.Online,
 			activities: [
@@ -114,10 +115,30 @@ export class DiscordController {
 	}
 
 	public static async setupCommands() {
-		//TODO: Rework this to be modular
-		const create = new CreateCMD();
-		const command = create.build();
-		commands.set(command.name, { builder: command, data: create });
+		const root = path.resolve(__dirname, '../commands');
+		const files = fs.readdirSync(root);
+		console.group('Loading Discord Modules...');
+		for (const file of files) {
+			const module = await import(path.join(root, file));
+			if (module.default == null) {
+				console.info(yellow(`Ignoring ${file}. No default export`));
+				continue;
+			}
+			const loaded = new module.default() as BaseCommand;
+			if ('build' in loaded && 'execute' in loaded) {
+				console.info(
+					green(`Loading module ${module.default?.name} from ${file}`),
+				);
+				const command = loaded.build();
+				commands.set(command.name, { builder: command, data: loaded });
+			} else {
+				console.info(red(`Failed to load ${module.default?.name}`));
+			}
+		}
+		console.groupEnd();
+		console.info(
+			`Loaded ${files.length} Discord modules. ${commands.size ? green(`${commands.size} loaded.`) : ''} ${files.length != commands.size ? yellow(`${files.length - commands.size} failed.`) : ''}`,
+		);
 		// DiscordController.registerCommands(); //? Register command changes
 	}
 

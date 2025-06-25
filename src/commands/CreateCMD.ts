@@ -9,7 +9,7 @@ import {
 } from 'discord.js';
 import { BaseCommand } from './BaseCommand';
 
-export class CreateCMD extends BaseCommand {
+export default class CreateCMD extends BaseCommand {
 	async execute(_interaction: Interaction) {
 		const interaction = _interaction as ChatInputCommandInteraction;
 		await interaction.deferReply({
