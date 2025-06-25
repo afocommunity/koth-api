@@ -45,7 +45,7 @@ export class CreateCMD extends BaseCommand {
 			flags: [MessageFlags.IsComponentsV2],
 		});
 	}
-	register() {
+	build() {
 		const createCommand = new SlashCommandBuilder()
 			.setName('create')
 			.setDescription('placeholder');

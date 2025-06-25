@@ -116,7 +116,7 @@ export class DiscordController {
 	public static async setupCommands() {
 		//TODO: Rework this to be modular
 		const create = new CreateCMD();
-		const command = create.register();
+		const command = create.build();
 		commands.set(command.name, { builder: command, data: create });
 		// DiscordController.registerCommands(); //? Register command changes
 	}
