@@ -6,8 +6,5 @@ import express from 'express';
 export const players = express.Router();
 players.get(
 	'/:player_id',
-	asyncHandler(
-		AuthMiddleware.bearerTokenAuth(),
-		PlayerController.reqFindPlayer,
-	),
+	asyncHandler(AuthMiddleware.bearerTokenAuth, PlayerController.reqFindPlayer),
 );

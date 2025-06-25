@@ -45,11 +45,13 @@ export class AuthMiddleware {
 		};
 		next();
 	}
-	public static bearerTokenAuth() {
-		return async (_req: Request, res: Response, next: NextFunction) => {
-			if (res.locals.auth == null)
-				return next(new DTO('Invalid Credentials', 401));
-			next();
-		};
+	public static async bearerTokenAuth(
+		_req: Request,
+		res: Response,
+		next: NextFunction,
+	) {
+		if (res.locals.auth == null)
+			return next(new DTO('Invalid Credentials', 401));
+		next();
 	}
 }

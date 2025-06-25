@@ -1,14 +1,23 @@
+import { BaseCommand } from '@/commands/BaseCommand';
+import { CreateCMD } from '@/commands/CreateCMD';
 import {
 	ActivityType,
+	AnySelectMenuInteraction,
 	CacheType,
 	ChatInputCommandInteraction,
 	Client,
+	Collection,
+	ContainerBuilder,
 	Events,
 	GatewayIntentBits,
 	Interaction,
 	MessageContextMenuCommandInteraction,
+	MessageFlags,
 	PresenceUpdateStatus,
 	PrimaryEntryPointCommandInteraction,
+	REST,
+	Routes,
+	SlashCommandBuilder,
 	UserContextMenuCommandInteraction,
 } from 'discord.js';
 
@@ -20,6 +29,10 @@ const readyPromise = new Promise((res, _rej) => {
 	resolve = res;
 });
 if (process.env.DISCORD_TOKEN) isEnabled = true;
+const commands = new Collection<
+	string,
+	{ data: BaseCommand; builder: SlashCommandBuilder }
+>();
 
 export class DiscordController {
 	public static get client(): Client<true> | null {
@@ -50,15 +63,37 @@ export class DiscordController {
 		if (interaction.isCommand()) {
 			return DiscordController.onCommand(interaction);
 		}
+		if (interaction.isAnySelectMenu()) {
+			return DiscordController.onSelect(interaction);
+		}
 		// ¯\_(ツ)_/¯ - Uh oh
 	}
+	public static async onSelect(interaction: AnySelectMenuInteraction) {
+		//TODO: Rework this to be modular
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+		console.log(interaction);
+		const resp = new ContainerBuilder().addTextDisplayComponents((text) =>
+			text.setContent(`You selected ${interaction.values.join(',')}`),
+		);
+		interaction.editReply({
+			components: [resp],
+			flags: MessageFlags.IsComponentsV2,
+		});
+	}
 	public static async onCommand(
-		_interaction:
+		interaction:
 			| ChatInputCommandInteraction<CacheType>
 			| MessageContextMenuCommandInteraction<CacheType>
 			| UserContextMenuCommandInteraction<CacheType>
 			| PrimaryEntryPointCommandInteraction<CacheType>,
-	) {}
+	) {
+		console.log(interaction);
+		if (!interaction.isChatInputCommand()) return;
+		const name = interaction.commandName;
+		if (commands.has(name)) {
+			commands.get(name).data.execute(interaction);
+		}
+	}
 
 	public static async onReady() {
 		isReady = true;
@@ -75,5 +110,23 @@ export class DiscordController {
 				},
 			],
 		});
+		DiscordController.setupCommands();
+	}
+
+	public static async setupCommands() {
+		//TODO: Rework this to be modular
+		const create = new CreateCMD();
+		const command = create.register();
+		commands.set(command.name, { builder: command, data: create });
+		// DiscordController.registerCommands(); //? Register command changes
+	}
+
+	public static async registerCommands() {
+		const rest = new REST().setToken(process.env.DISCORD_TOKEN);
+		const rawJSON = [...commands.map((e) => e.builder.toJSON())];
+		await rest.put(
+			Routes.applicationCommands(DiscordController.client.application.id),
+			{ body: rawJSON },
+		);
 	}
 }

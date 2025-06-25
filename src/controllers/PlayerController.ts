@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { IdType } from '@/commands/IdType';
-import { PlayerScope } from '@/commands/scope';
+import { IdType } from '@/schemas/IdType';
+import { PlayerScope } from '@/schemas/scope';
 import { Player } from '@/models/Player.model';
 import { DTO } from '@/utils/DTO';
 
