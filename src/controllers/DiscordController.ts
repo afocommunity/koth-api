@@ -130,6 +130,7 @@ export class DiscordController {
 		console.group('Loading Discord Modules...');
 		for (const file of files) {
 			const module = await import(path.join(root, file));
+			if (file.startsWith('BaseCommand')) continue;
 			if (module.default == null) {
 				console.info(yellow(`Ignoring ${file}. No default export`));
 				continue;
@@ -167,7 +168,7 @@ export class DiscordController {
 		}
 		console.groupEnd();
 		console.info(
-			`Loaded ${files.length} Discord modules. ${commandRegistry.size ? green(`${commandRegistry.size} loaded.`) : ''} ${files.length != commandRegistry.size ? yellow(`${files.length - commandRegistry.size} failed.`) : ''}`,
+			`Loaded ${files.length - 1} Discord modules. ${commandRegistry.size ? green(`${commandRegistry.size} loaded.`) : ''} ${files.length - 1 != commandRegistry.size ? red(`${files.length - 1 - commandRegistry.size} failed.`) : ''}`,
 		);
 		// DiscordController.registerCommands(); //? Register command changes
 	}
