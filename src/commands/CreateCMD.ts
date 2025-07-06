@@ -1,7 +1,7 @@
 import {
 	ChatInputCommandInteraction,
+	CommandInteraction,
 	ContainerBuilder,
-	Interaction,
 	MessageFlags,
 	SlashCommandBuilder,
 	StringSelectMenuBuilder,
@@ -10,7 +10,7 @@ import {
 import { BaseCommand } from './BaseCommand';
 
 export default class CreateCMD extends BaseCommand {
-	async execute(_interaction: Interaction) {
+	async executeCommand(_interaction: CommandInteraction) {
 		const interaction = _interaction as ChatInputCommandInteraction;
 		await interaction.deferReply({
 			flags: MessageFlags.Ephemeral,
@@ -50,6 +50,6 @@ export default class CreateCMD extends BaseCommand {
 			.setName('create')
 			.setDescription('placeholder');
 
-		return createCommand;
+		return { commands: [createCommand] };
 	}
 }
