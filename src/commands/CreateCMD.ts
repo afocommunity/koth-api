@@ -1,4 +1,5 @@
 import {
+	AnySelectMenuInteraction,
 	ChatInputCommandInteraction,
 	CommandInteraction,
 	ContainerBuilder,
@@ -7,7 +8,7 @@ import {
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
-import { BaseCommand } from './BaseCommand';
+import { BaseCommand, BaseCommandBuilder } from './BaseCommand';
 
 export default class CreateCMD extends BaseCommand {
 	async executeCommand(_interaction: CommandInteraction) {
@@ -45,11 +46,29 @@ export default class CreateCMD extends BaseCommand {
 			flags: [MessageFlags.IsComponentsV2],
 		});
 	}
-	build() {
+	public async executeSelect(interaction: AnySelectMenuInteraction) {
+		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+		const container = new ContainerBuilder()
+			.setAccentColor(0x0099ff)
+			.addTextDisplayComponents((textDisplay) =>
+				textDisplay.setContent('You selected:'),
+			)
+			.addTextDisplayComponents((textDisplay) =>
+				textDisplay.setContent(interaction.values[0]),
+			);
+		await interaction.editReply({
+			components: [container],
+			flags: [MessageFlags.IsComponentsV2],
+		});
+	}
+	build(): BaseCommandBuilder {
 		const createCommand = new SlashCommandBuilder()
 			.setName('create')
 			.setDescription('placeholder');
 
-		return { commands: [createCommand] };
+		return {
+			commands: [createCommand],
+			select: ['createItem'],
+		};
 	}
 }

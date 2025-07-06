@@ -6,15 +6,15 @@ import {
 	ModalSubmitInteraction,
 	SlashCommandBuilder,
 } from 'discord.js';
-
+export type BaseCommandBuilder = {
+	commands?: SlashCommandBuilder[];
+	buttons?: string[];
+	autocomplete?: string[];
+	modals?: string[];
+	select?: string[];
+};
 export abstract class BaseCommand {
-	abstract build(): {
-		commands?: SlashCommandBuilder[];
-		buttons?: string[];
-		autocomplete?: string[];
-		modals?: string[];
-		select?: string[];
-	};
+	abstract build(): BaseCommandBuilder;
 	public async executeCommand?(
 		interaction: CommandInteraction,
 	): Promise<unknown>;

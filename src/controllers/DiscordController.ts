@@ -64,34 +64,45 @@ export class DiscordController {
 	public static async onInteraction(interaction: Interaction<CacheType>) {
 		if (interaction.isCommand()) {
 			const name = interaction.commandName;
+			console.log(`interaction: ${name};`, commandRegistry);
 			if (commandRegistry.has(name)) {
 				commandRegistry.get(name).data.executeCommand?.(interaction);
 			}
+			return;
 		}
 		if (interaction.isAnySelectMenu()) {
 			const name = interaction.customId;
-			if (buttonRegistry.has(name)) {
+			console.log(`select: ${name};`, selectRegistry);
+			if (selectRegistry.has(name)) {
 				selectRegistry.get(name).data.executeSelect(interaction);
 			}
+			return;
 		}
 		if (interaction.isButton()) {
 			const name = interaction.customId;
+			console.log(`button: ${name};`, buttonRegistry);
 			if (buttonRegistry.has(name)) {
 				buttonRegistry.get(name).data.executeButton?.(interaction);
 			}
+			return;
 		}
 		if (interaction.isModalSubmit()) {
 			const name = interaction.customId;
-			if (buttonRegistry.has(name)) {
+			console.log(`modal: ${name}`, modalRegistry);
+			if (modalRegistry.has(name)) {
 				modalRegistry.get(name).data.executeModal?.(interaction);
 			}
+			return;
 		}
 		if (interaction.isAutocomplete()) {
 			const name = interaction.commandName;
-			if (buttonRegistry.has(name)) {
+			console.log(`autocomplete: ${name};`, autocompleteRegistry);
+			if (autocompleteRegistry.has(name)) {
 				autocompleteRegistry.get(name).data.executeAutocomplete?.(interaction);
 			}
+			return;
 		}
+		console.error(interaction);
 		// ¯\_(ツ)_/¯ - Uh oh
 	}
 
@@ -124,20 +135,21 @@ export class DiscordController {
 				continue;
 			}
 			const loaded = new module.default() as BaseCommand;
-			if ('build' in loaded && 'execute' in loaded) {
+			if ('build' in loaded) {
 				console.info(
 					green(`Loading module ${module.default?.name} from ${file}`),
 				);
 				const {
 					commands = [],
-					buttons: events = [],
+					buttons = [],
 					modals = [],
 					autocomplete = [],
+					select = [],
 				} = loaded.build();
 				for (const command of commands) {
 					commandRegistry.set(command.name, { builder: command, data: loaded });
 				}
-				for (const event of events) {
+				for (const event of buttons) {
 					buttonRegistry.set(event, { data: loaded });
 				}
 				for (const modal of modals) {
@@ -145,6 +157,9 @@ export class DiscordController {
 				}
 				for (const event of autocomplete) {
 					autocompleteRegistry.set(event, { data: loaded });
+				}
+				for (const event of select) {
+					selectRegistry.set(event, { data: loaded });
 				}
 			} else {
 				console.info(red(`Failed to load ${module.default?.name}`));
