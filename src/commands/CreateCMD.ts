@@ -5,10 +5,14 @@ import {
 	ContainerBuilder,
 	MessageFlags,
 	SlashCommandBuilder,
+	spoiler,
+	bold,
+	codeBlock,
 	StringSelectMenuBuilder,
 	StringSelectMenuOptionBuilder,
 } from 'discord.js';
 import { BaseCommand, BaseCommandBuilder } from './BaseCommand';
+import { AuthController } from '@/controllers/AuthController';
 
 export default class CreateCMD extends BaseCommand {
 	async executeCommand(_interaction: CommandInteraction) {
@@ -47,16 +51,28 @@ export default class CreateCMD extends BaseCommand {
 		});
 	}
 	public async executeSelect(interaction: AnySelectMenuInteraction) {
-		await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-		const container = new ContainerBuilder()
-			.setAccentColor(0x0099ff)
-			.addTextDisplayComponents((textDisplay) =>
-				textDisplay.setContent('You selected:'),
-			)
-			.addTextDisplayComponents((textDisplay) =>
-				textDisplay.setContent(interaction.values[0]),
-			);
-		await interaction.editReply({
+		const container = new ContainerBuilder().setAccentColor(0x0099ff);
+		if (interaction.values[0] === 'create-token') {
+			const tokens = await AuthController.createApiToken('0', '0', '14h');
+			container
+				.addTextDisplayComponents((textDisplay) =>
+					textDisplay.setContent(
+						`Token Created. ${bold('This will not be recoverable if you lose this')}`,
+					),
+				)
+				.addTextDisplayComponents((td) =>
+					td.setContent(spoiler(codeBlock(tokens.token))),
+				);
+		} else {
+			container
+				.addTextDisplayComponents((textDisplay) =>
+					textDisplay.setContent('You selected:'),
+				)
+				.addTextDisplayComponents((textDisplay) =>
+					textDisplay.setContent(interaction.values[0]),
+				);
+		}
+		await interaction.update({
 			components: [container],
 			flags: [MessageFlags.IsComponentsV2],
 		});
