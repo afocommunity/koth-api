@@ -6,9 +6,9 @@ export default {
 			raw: args[0],
 			time: args[1],
 			chainID: args[2],
-      blufor: args[3],
-      redfor: args[4],
-      indfor: args[5]
+			blufor: args[3],
+			redfor: args[4],
+			indfor: args[5],
 		};
 		logParser.eventStore.KOTH_TICKETS = data;
 	},

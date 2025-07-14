@@ -3,6 +3,7 @@
 	"private": true,
 	"dependencies": {
 		"@paralleldrive/cuid2": "2.2.2",
+		"axios": "1.10.0",
 		"bufferutil": "4.0.9",
 		"colors": "1.4.0",
 		"compression": "1.8.0",
