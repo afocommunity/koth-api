@@ -52,25 +52,32 @@ export default class CreateCMD extends BaseCommand {
 	}
 	public async executeSelect(interaction: AnySelectMenuInteraction) {
 		const container = new ContainerBuilder().setAccentColor(0x0099ff);
-		if (interaction.values[0] === 'create-token') {
-			const tokens = await AuthController.createApiToken('0', '0', '14h');
-			container
-				.addTextDisplayComponents((textDisplay) =>
-					textDisplay.setContent(
-						`Token Created. ${bold('This will not be recoverable if you lose this')}`,
-					),
-				)
-				.addTextDisplayComponents((td) =>
-					td.setContent(spoiler(codeBlock(tokens.token))),
-				);
-		} else {
-			container
-				.addTextDisplayComponents((textDisplay) =>
-					textDisplay.setContent('You selected:'),
-				)
-				.addTextDisplayComponents((textDisplay) =>
-					textDisplay.setContent(interaction.values[0]),
-				);
+		switch (interaction.values[0]) {
+			case 'create-token': {
+				const tokens = await AuthController.createApiToken('0', '0', '14h');
+				container
+					.addTextDisplayComponents((textDisplay) =>
+						textDisplay.setContent(
+							`Token Created. ${bold('This will not be recoverable if you lose this')}`,
+						),
+					)
+					.addTextDisplayComponents((td) =>
+						td.setContent(spoiler(codeBlock(tokens.token))),
+					);
+				break;
+			}
+			case 'create-server':
+			case 'create-org':
+			default: {
+				container
+					.addTextDisplayComponents((textDisplay) =>
+						textDisplay.setContent('You selected:'),
+					)
+					.addTextDisplayComponents((textDisplay) =>
+						textDisplay.setContent(interaction.values[0]),
+					);
+				break;
+			}
 		}
 		await interaction.update({
 			components: [container],
