@@ -31,11 +31,18 @@ export default class KOTHPlugin extends BasePlugin {
 				description: 'KOTH Api Token',
 				default: 'YOUR_ACCESS_TOKEN',
 			},
+			apiEndpoint: {
+				required: false,
+				description:
+					'KOTH Api Endpoint (If you want to have your own private or local economy)',
+				default: null,
+			},
 		};
 	}
 
 	constructor(server, options, connectors) {
 		super(server, options, connectors);
+		this.host = options.apiEndpoint ?? API_ENDPOINT;
 	}
 
 	getHeaders() {
