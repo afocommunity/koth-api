@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { CURRENT_VERSION } from './CURRENT_VERSION';
+import { CURRENT_PLUGIN_VERSION } from './CURRENT_PLUGIN_VERSION';
 
 const buildEvents = async () => {
 	const events: Array<{ name: string; file: string }> = [];
@@ -23,6 +23,6 @@ export const buildPlugin = async () => {
 		.toString();
 
 	let compiledPlugin = '';
-	compiledPlugin += `const EVENTS = ${JSON.stringify(events)}\n\nconst CURRENT_VERSION=${JSON.stringify(CURRENT_VERSION)}\n\nconst API_ENDPOINT="http://localhost:3030/"\n\n${squadJSPluginRaw}`;
+	compiledPlugin += `const EVENTS = ${JSON.stringify(events)}\n\nconst CURRENT_PLUGIN_VERSION=${JSON.stringify(CURRENT_PLUGIN_VERSION)}\n\nconst API_ENDPOINT="http://localhost:3030/"\n\n${squadJSPluginRaw}`;
 	return compiledPlugin;
 };

@@ -1,4 +1,4 @@
-import { BaseCommand } from '@/commands/BaseCommand';
+import { BaseCommand } from '@/discord/commands/BaseCommand';
 import { green, red, yellow } from 'colors';
 import {
 	ActivityType,
@@ -125,7 +125,7 @@ export class DiscordController {
 	}
 
 	public static async setupCommands() {
-		const root = path.resolve(__dirname, '../commands');
+		const root = path.resolve(__dirname, '../discord/commands');
 		const files = fs.readdirSync(root);
 		console.group('Loading Discord Modules...');
 		for (const file of files) {
@@ -174,11 +174,20 @@ export class DiscordController {
 	}
 
 	public static async registerCommands() {
+		console.info(`Registering ${commandRegistry.size} commands`);
 		const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 		const rawJSON = [...commandRegistry.map((e) => e.builder.toJSON())];
 		await rest.put(
 			Routes.applicationCommands(DiscordController.client.application.id),
 			{ body: rawJSON },
 		);
+		if (process.env.GUILD_ID)
+			await rest.put(
+				Routes.applicationGuildCommands(
+					DiscordController.client.application.id,
+					process.env.GUILD_ID,
+				),
+				{ body: rawJSON },
+			);
 	}
 }
