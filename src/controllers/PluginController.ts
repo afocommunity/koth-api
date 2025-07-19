@@ -24,6 +24,6 @@ export class PluginController {
 		_res: Response,
 		next: NextFunction,
 	) {
-		next(new DTO(CURRENT_PLUGIN_VERSION))
+		next(new DTO(CURRENT_PLUGIN_VERSION));
 	}
 }
