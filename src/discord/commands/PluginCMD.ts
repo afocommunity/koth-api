@@ -8,6 +8,7 @@ import {
 } from 'discord.js';
 import { BaseCommand, BaseCommandBuilder } from './BaseCommand';
 import { buildPlugin } from '@/squadjs/buildPluginFile';
+import { CURRENT_PLUGIN_VERSION } from '@/squadjs/CURRENT_PLUGIN_VERSION';
 export default class PluginCMD extends BaseCommand {
 	async executeCommand(_interaction: CommandInteraction) {
 		const interaction = _interaction as ChatInputCommandInteraction;
@@ -18,7 +19,7 @@ export default class PluginCMD extends BaseCommand {
 			.setAccentColor(0x0099ff)
 			.addTextDisplayComponents((textDisplay) =>
 				textDisplay.setContent(
-					'# KOTH SquadJS Plugin\nDownload the latest version of the plugin below',
+					`# KOTH SquadJS Plugin\nDownload the latest version of the plugin below\n**Version:** ${CURRENT_PLUGIN_VERSION}`,
 				),
 			)
 			.addSeparatorComponents((sp) => sp.setDivider(true))
