@@ -1,3 +1,4 @@
+import { green, yellow, white } from 'colors';
 import { CronJob } from 'cron';
 
 const cronjobs = new Map<string, CronJob>();
@@ -16,7 +17,9 @@ export class CronController {
 			start: true,
 		});
 		cronjobs.set(job_id, job);
-		console.info(`Registered cron ${job_id} (${cronTime})`);
+		console.info(
+			green(`Registered cron ${white(job_id)} (${yellow(cronTime)})`),
+		);
 	}
 	public static async pauseCron(job_id: string) {
 		console.info(`Pausing cron ${job_id}`);

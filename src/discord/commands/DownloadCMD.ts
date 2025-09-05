@@ -9,7 +9,7 @@ import {
 import { BaseCommand, BaseCommandBuilder } from './BaseCommand';
 import { buildPlugin } from '@/squadjs/buildPluginFile';
 import { CURRENT_PLUGIN_VERSION } from '@/squadjs/CURRENT_PLUGIN_VERSION';
-export default class PluginCMD extends BaseCommand {
+export default class DownloadCMD extends BaseCommand {
 	async executeCommand(_interaction: CommandInteraction) {
 		const interaction = _interaction as ChatInputCommandInteraction;
 		await interaction.deferReply({
@@ -26,7 +26,9 @@ export default class PluginCMD extends BaseCommand {
 			.addFileComponents((file) => file.setURL('attachment://KOTHPlugin.js'))
 			.addSeparatorComponents((sp) => sp.setDivider(true))
 			.addTextDisplayComponents((textDisplay) =>
-				textDisplay.setContent('## Instructions\nTODO'),
+				textDisplay.setContent(
+					'## Instructions\n- 1. Place `KOTHPlugin.js` in your SquadJS Plugins folder (Located in `/squad-server/plugins`)\n- 2. Set up the Config.json with your access token (</create:1387267086627115129>)\n- 3. Restart SquadJS\n- 4. Follow any onscreen instructions. You might need to restart again if there are event hooks that need set up.',
+				),
 			);
 		const file = new AttachmentBuilder(Buffer.from(await buildPlugin()))
 			.setName('KOTHPlugin.js')
@@ -39,8 +41,8 @@ export default class PluginCMD extends BaseCommand {
 	}
 	build(): BaseCommandBuilder {
 		const pluginCommand = new SlashCommandBuilder()
-			.setName('plugin')
-			.setDescription('placeholder');
+			.setName('download')
+			.setDescription('Download the latest version of the KothSync plugin');
 
 		return {
 			commands: [pluginCommand],

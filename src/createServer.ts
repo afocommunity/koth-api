@@ -34,6 +34,7 @@ export const createServer = async () => {
 	app.use(routing);
 	//? Cron Jobs
 	AuthController.setupCron();
+	DiscordController.setupCron();
 	//? Misc Setup
 	await DiscordController.setup();
 	//? Handling

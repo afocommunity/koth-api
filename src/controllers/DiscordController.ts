@@ -1,5 +1,5 @@
 import { BaseCommand } from '@/discord/commands/BaseCommand';
-import { green, red, yellow } from 'colors';
+import { green, red, yellow, white } from 'colors';
 import {
 	ActivityType,
 	CacheType,
@@ -15,6 +15,9 @@ import {
 } from 'discord.js';
 import fs from 'node:fs';
 import path from 'node:path';
+import { CronController } from './CronController';
+import { FormState } from '@/models/FormState.model';
+import { Op } from 'sequelize';
 
 let client: Client;
 let isReady = false;
@@ -37,6 +40,27 @@ const autocompleteRegistry = new Collection<string, { data: BaseCommand }>();
 const selectRegistry = new Collection<string, { data: BaseCommand }>();
 
 export class DiscordController {
+	public static async setupCron() {
+		CronController.addCron(
+			'clear_expired_forms',
+			'0 5 * * * *',
+			DiscordController.clearExpiredForms,
+		);
+	}
+	public static async clearExpiredForms() {
+		const now = Date.now();
+		const expires_in = 1000 * 60 * 15;
+		const expiringForms = await FormState.findAll({
+			where: { updatedAt: { [Op.lte]: now + expires_in } },
+		});
+
+		for (const _token of expiringForms) {
+			//TODO Alert?
+		}
+		return await FormState.destroy({
+			where: { updatedAt: { [Op.lte]: now + expires_in } },
+		});
+	}
 	public static get client(): Client<true> | null {
 		if (DiscordController.ready) return client as Client<true>;
 		return null;
@@ -64,7 +88,6 @@ export class DiscordController {
 	public static async onInteraction(interaction: Interaction<CacheType>) {
 		if (interaction.isCommand()) {
 			const name = interaction.commandName;
-			console.log(`interaction: ${name};`, commandRegistry);
 			if (commandRegistry.has(name)) {
 				commandRegistry.get(name).data.executeCommand?.(interaction);
 			}
@@ -72,15 +95,14 @@ export class DiscordController {
 		}
 		if (interaction.isAnySelectMenu()) {
 			const name = interaction.customId;
-			console.log(`select: ${name};`, selectRegistry);
 			if (selectRegistry.has(name)) {
-				selectRegistry.get(name).data.executeSelect(interaction);
+				selectRegistry.get(name).data.executeSelect?.(interaction);
 			}
 			return;
 		}
 		if (interaction.isButton()) {
 			const name = interaction.customId;
-			console.log(`button: ${name};`, buttonRegistry);
+
 			if (buttonRegistry.has(name)) {
 				buttonRegistry.get(name).data.executeButton?.(interaction);
 			}
@@ -88,7 +110,7 @@ export class DiscordController {
 		}
 		if (interaction.isModalSubmit()) {
 			const name = interaction.customId;
-			console.log(`modal: ${name}`, modalRegistry);
+
 			if (modalRegistry.has(name)) {
 				modalRegistry.get(name).data.executeModal?.(interaction);
 			}
@@ -96,7 +118,7 @@ export class DiscordController {
 		}
 		if (interaction.isAutocomplete()) {
 			const name = interaction.commandName;
-			console.log(`autocomplete: ${name};`, autocompleteRegistry);
+
 			if (autocompleteRegistry.has(name)) {
 				autocompleteRegistry.get(name).data.executeAutocomplete?.(interaction);
 			}
@@ -138,7 +160,9 @@ export class DiscordController {
 			const loaded = new module.default() as BaseCommand;
 			if ('build' in loaded) {
 				console.info(
-					green(`Loading module ${module.default?.name} from ${file}`),
+					green(
+						`Loading module ${white(module.default?.name)} from ${yellow(file)}`,
+					),
 				);
 				const {
 					commands = [],
@@ -177,10 +201,12 @@ export class DiscordController {
 		console.info(`Registering ${commandRegistry.size} commands`);
 		const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 		const rawJSON = [...commandRegistry.map((e) => e.builder.toJSON())];
+		/*
 		await rest.put(
 			Routes.applicationCommands(DiscordController.client.application.id),
 			{ body: rawJSON },
 		);
+		*/
 		if (process.env.GUILD_ID)
 			await rest.put(
 				Routes.applicationGuildCommands(
