@@ -5,32 +5,23 @@ import {
 	ContainerBuilder,
 	MessageFlags,
 	SlashCommandBuilder,
-	spoiler,
-	bold,
-	codeBlock,
 	ModalSubmitInteraction,
-	ModalBuilder,
-	TextInputBuilder,
-	ActionRowBuilder,
-	TextInputStyle,
-	ModalActionRowComponentBuilder,
 	ButtonBuilder,
 	ButtonStyle,
 	ButtonInteraction,
 	ComponentType,
-	UserSelectMenuBuilder,
 	UserSelectMenuInteraction,
 } from 'discord.js';
 import { BaseCommand, BaseCommandBuilder } from './BaseCommand';
-import { AuthController } from '@/controllers/AuthController';
 import { FormState } from '@/models/FormState.model';
 import { createId } from '@/utils/createId';
+import { KothUI } from '../KothUI';
 
 export default class CreateCMD extends BaseCommand {
 	async executeCommand(_interaction: CommandInteraction) {
 		const interaction = _interaction as ChatInputCommandInteraction;
 		await interaction.deferReply({
-			flags: MessageFlags.Ephemeral,
+			// flags: MessageFlags.Ephemeral,
 		});
 		const msg = await interaction.fetchReply();
 		let formState = await FormState.findOne({
@@ -72,57 +63,6 @@ export default class CreateCMD extends BaseCommand {
 			flags: [MessageFlags.IsComponentsV2],
 		});
 	}
-	public async createNewOrgWindow(formState) {
-		const container = new ContainerBuilder()
-			.setAccentColor(0x0099ff)
-			.addTextDisplayComponents((textDisplay) =>
-				textDisplay.setContent(
-					`# Create New Organization\n\n## Name\n\`${formState.orgName ?? 'No Name????'}\`\n## Owner`,
-				),
-			);
-		if (formState.owner) {
-			container.addActionRowComponents((ar) =>
-				ar.addComponents(
-					new UserSelectMenuBuilder()
-						.setCustomId('newOrgOwner')
-						.setPlaceholder('Org Owner')
-						.setDefaultUsers(formState.owner),
-				),
-			);
-			// container.addTextDisplayComponents((textDisplay) =>
-			// 	textDisplay.setContent(
-			// 		`Owner: <@${formState.owner}> (${formState.owner_name})`,
-			// 	),
-			// );
-		} else {
-			container.addActionRowComponents((ar) =>
-				ar.addComponents(
-					new UserSelectMenuBuilder()
-						.setCustomId('newOrgOwner')
-						.setPlaceholder('Org Owner'),
-				),
-			);
-		}
-		const isReady = formState.orgName != null && formState.owner != null;
-		container
-			.addSeparatorComponents((sp) => sp.setDivider(true))
-			.addActionRowComponents((ar) =>
-				ar.addComponents(
-					new ButtonBuilder()
-						.setLabel('Create New Org')
-						.setStyle(ButtonStyle.Success)
-						.setDisabled(!isReady)
-						.setCustomId('finalizeOrgCreation'),
-					// .setEmoji('✅'),
-					new ButtonBuilder()
-						.setLabel('Cancel')
-						.setStyle(ButtonStyle.Danger)
-						.setCustomId('cancelOrgCreation'),
-					// .setEmoji('❌'),
-				),
-			);
-		return container;
-	}
 	public async executeButton(interaction: ButtonInteraction) {
 		const formState = await FormState.findOne({
 			where: { message_id: interaction.message.id },
@@ -140,19 +80,14 @@ export default class CreateCMD extends BaseCommand {
 		}
 		switch (interaction.customId) {
 			case 'createOrg': {
+				const response = await interaction.deferUpdate({
+					// flags: MessageFlags.Ephemeral,
+				});
 				formState.type = 'createOrg';
-				const modal = new ModalBuilder()
-					.setTitle('Create Organization')
-					.setCustomId('createOrg')
-					.addComponents(
-						new ActionRowBuilder<ModalActionRowComponentBuilder>().addComponents(
-							new TextInputBuilder()
-								.setCustomId('orgName')
-								.setLabel('Organization Name')
-								.setStyle(TextInputStyle.Short),
-						),
-					);
-				interaction.showModal(modal, { withResponse: true });
+				response.edit({
+					components: [KothUI.createNewOrgWindow(JSON.parse(formState.data))],
+					flags: [MessageFlags.IsComponentsV2],
+				});
 				break;
 			}
 		}
@@ -179,9 +114,9 @@ export default class CreateCMD extends BaseCommand {
 			ComponentType.TextInput,
 		).value;
 		await interaction.deferReply({
-			flags: MessageFlags.Ephemeral,
+			// flags: MessageFlags.Ephemeral,
 		});
-		const container = await this.createNewOrgWindow(formData);
+		const container = KothUI.createNewOrgWindow(formData);
 
 		// formState.message_id = msg.id;
 		//await formState.save();
@@ -217,9 +152,78 @@ export default class CreateCMD extends BaseCommand {
 				const user = i.users.at(0);
 				formData.owner = user.id;
 				formData.owner_name = user.username;
-				container = await this.createNewOrgWindow(formData);
+				container = KothUI.createNewOrgWindow(formData);
 				formState.data = JSON.stringify(formData);
 				break;
+			}
+			case 'newOrgAdmins': {
+				const i = interaction as UserSelectMenuInteraction;
+				const formData = JSON.parse(formState.data);
+				const users = i.users;
+				formData.admins = users.map((u) => u.id);
+				container = KothUI.createNewOrgWindow(formData);
+				formState.data = JSON.stringify(formData);
+				break;
+			}
+			case 'newOrgInvite': {
+				const formData = JSON.parse(formState.data);
+				await interaction.showModal(
+					KothUI.createNewOrgInviteModal(formData.orgInvite),
+				);
+				try {
+					const r = await interaction.awaitModalSubmit({
+						filter: (i) =>
+							i.message.id == formState.message_id &&
+							i.customId == 'newOrgInvite',
+						time: 480_000,
+					});
+					const c = await r.deferUpdate();
+					const newInvite = r.fields.getField('newOrgInvite').value;
+					formData.orgInvite = newInvite;
+					formState.data = JSON.stringify(formData);
+					await formState.save();
+					c.edit({
+						components: [KothUI.createNewOrgWindow(formData)],
+						flags: [MessageFlags.IsComponentsV2],
+					});
+				} catch (_) {
+					container = KothUI.createNewOrgWindow(formData);
+					await interaction.update({
+						components: [container],
+						flags: [MessageFlags.IsComponentsV2],
+					});
+				}
+				return;
+			}
+			case 'newOrgName': {
+				const formData = JSON.parse(formState.data);
+				await interaction.showModal(
+					KothUI.createNewOrgNameModal(formData.orgName),
+				);
+				try {
+					const r = await interaction.awaitModalSubmit({
+						filter: (i) =>
+							i.message.id == formState.message_id &&
+							i.customId == 'newOrgName',
+						time: 480_000,
+					});
+					const c = await r.deferUpdate();
+					const newName = r.fields.getField('newOrgName').value;
+					formData.orgName = newName;
+					formState.data = JSON.stringify(formData);
+					await formState.save();
+					c.edit({
+						components: [KothUI.createNewOrgWindow(formData)],
+						flags: [MessageFlags.IsComponentsV2],
+					});
+				} catch (_) {
+					container = KothUI.createNewOrgWindow(formData);
+					await interaction.update({
+						components: [container],
+						flags: [MessageFlags.IsComponentsV2],
+					});
+				}
+				return;
 			}
 		}
 		await formState.save();
@@ -236,7 +240,13 @@ export default class CreateCMD extends BaseCommand {
 		return {
 			commands: [createCommand],
 			buttons: ['createToken', 'createOrg'],
-			select: ['createItem', 'newOrgOwner'],
+			select: [
+				'createItem',
+				'newOrgOwner',
+				'newOrgAdmins',
+				'newOrgName',
+				'newOrgInvite',
+			],
 			modals: ['createOrg'],
 		};
 	}

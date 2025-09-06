@@ -13,7 +13,7 @@ export default class DownloadCMD extends BaseCommand {
 	async executeCommand(_interaction: CommandInteraction) {
 		const interaction = _interaction as ChatInputCommandInteraction;
 		await interaction.deferReply({
-			flags: MessageFlags.Ephemeral,
+			// flags: MessageFlags.Ephemeral,
 		});
 		const container = new ContainerBuilder()
 			.setAccentColor(0x0099ff)

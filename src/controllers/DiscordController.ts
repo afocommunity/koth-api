@@ -86,6 +86,10 @@ export class DiscordController {
 	}
 
 	public static async onInteraction(interaction: Interaction<CacheType>) {
+		console.log(
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			`Interaction [${interaction.type}](${yellow((interaction as any).customId ?? interaction.id)}) triggered by user (${yellow(interaction.user.username)})`,
+		);
 		if (interaction.isCommand()) {
 			const name = interaction.commandName;
 			if (commandRegistry.has(name)) {
