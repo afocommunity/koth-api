@@ -82,7 +82,7 @@ export default class CreateCMD extends BaseCommand {
 						],
 						flags: [MessageFlags.IsComponentsV2],
 					});
-					return
+					return;
 				}
 				formState.type = 'createOrg';
 				formState.data = JSON.stringify({});
