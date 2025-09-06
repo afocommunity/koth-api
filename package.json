@@ -27,7 +27,7 @@
 		"lint:fix": "tsc --noEmit && npx eslint ./src --fix && npx prettier ./src --write"
 	},
 	"devDependencies": {
-		"@eslint/js": "9.34.0",
+		"@eslint/js": "9.35.0",
 		"@swc-node/register": "1.11.1",
 		"@swc/core": "1.13.5",
 		"@types/compression": "1.8.1",
@@ -36,10 +36,10 @@
 		"@types/jsonwebtoken": "9.0.10",
 		"@types/morgan": "1.9.10",
 		"@types/ms": "2.1.0",
-		"@types/node": "24.3.0",
+		"@types/node": "24.3.1",
 		"dotenv": "17.2.2",
 		"dotenv-cli": "10.0.0",
-		"eslint": "9.34.0",
+		"eslint": "9.35.0",
 		"eslint-plugin-prettier": "5.5.4",
 		"eslint-plugin-simple-import-sort": "12.1.1",
 		"globals": "16.3.0",
