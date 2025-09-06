@@ -19,7 +19,7 @@ type NewOrgFormState = {
 	admins?: string[];
 };
 export class KothUI {
-	public static createNewOrgWindow(formState: NewOrgFormState) {
+	public static buildCreateNewOrgWindow(formState: NewOrgFormState) {
 		const container = new ContainerBuilder().setAccentColor(0x0099ff);
 		container.addTextDisplayComponents((textDisplay) =>
 			textDisplay.setContent(`# New Organization\n## Name`),
@@ -49,8 +49,13 @@ export class KothUI {
 						.setPlaceholder('Set Name')
 						.setOptions(
 							new StringSelectMenuOptionBuilder()
-								.setLabel('Set Name')
+								.setLabel('Input Value')
 								.setValue('set-name'),
+							new StringSelectMenuOptionBuilder()
+								.setLabel(
+									'Input Value - Duplicate because the selector can break',
+								)
+								.setValue('set-name-2'),
 						),
 				),
 			);
@@ -84,8 +89,13 @@ export class KothUI {
 						.setPlaceholder('Set Discord Invite')
 						.setOptions(
 							new StringSelectMenuOptionBuilder()
-								.setLabel('Set Discord Invite')
+								.setLabel('Input Value')
 								.setValue('set-invite'),
+							new StringSelectMenuOptionBuilder()
+								.setLabel(
+									'Input Value - Duplicate because the selector can break',
+								)
+								.setValue('set-invite-2'),
 						),
 				),
 			);
@@ -132,7 +142,10 @@ export class KothUI {
 				),
 			);
 		}
-		const isReady = formState.orgName != null && formState.owner != null;
+		const isReady =
+			formState.orgName != null &&
+			formState.owner != null &&
+			formState.orgInvite != null;
 		container
 			.addSeparatorComponents((sp) => sp.setDivider(true))
 			.addActionRowComponents((ar) =>
@@ -152,7 +165,7 @@ export class KothUI {
 			);
 		return container;
 	}
-	public static createNewOrgNameModal(currentName?: string) {
+	public static buildCreateNewOrgNameModal(currentName?: string) {
 		const modal = new ModalBuilder();
 		const input = new TextInputBuilder()
 			.setCustomId('newOrgName')
@@ -171,7 +184,7 @@ export class KothUI {
 			);
 		return modal;
 	}
-	public static createNewOrgInviteModal(currentInvite?: string) {
+	public static buildCreateNewOrgInviteModal(currentInvite?: string) {
 		const modal = new ModalBuilder();
 		const input = new TextInputBuilder()
 			.setCustomId('newOrgInvite')
@@ -190,5 +203,33 @@ export class KothUI {
 				),
 			);
 		return modal;
+	}
+	public static buildCreateWhatForm(enableOrg: boolean = true) {
+		const container = new ContainerBuilder()
+			.setAccentColor(0x0099ff)
+			.addTextDisplayComponents((textDisplay) =>
+				textDisplay.setContent('What are you creating?'),
+			)
+			.addActionRowComponents((row) => {
+				row.setComponents(
+					new ButtonBuilder()
+						.setStyle(ButtonStyle.Primary)
+						.setLabel('Create Token')
+						.setCustomId('createToken'),
+					new ButtonBuilder()
+						.setStyle(ButtonStyle.Primary)
+						.setLabel('Create Server')
+						.setCustomId('createServer'),
+				);
+				if (enableOrg)
+					row.addComponents(
+						new ButtonBuilder()
+							.setStyle(ButtonStyle.Secondary)
+							.setLabel('Create Org')
+							.setCustomId('createOrg'),
+					);
+				return row;
+			});
+		return container;
 	}
 }

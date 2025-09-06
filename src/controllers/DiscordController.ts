@@ -90,43 +90,49 @@ export class DiscordController {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			`Interaction [${interaction.type}](${yellow((interaction as any).customId ?? interaction.id)}) triggered by user (${yellow(interaction.user.username)})`,
 		);
-		if (interaction.isCommand()) {
-			const name = interaction.commandName;
-			if (commandRegistry.has(name)) {
-				commandRegistry.get(name).data.executeCommand?.(interaction);
+		try {
+			if (interaction.isCommand()) {
+				const name = interaction.commandName;
+				if (commandRegistry.has(name)) {
+					commandRegistry.get(name).data.executeCommand?.(interaction);
+				}
+				return;
 			}
-			return;
-		}
-		if (interaction.isAnySelectMenu()) {
-			const name = interaction.customId;
-			if (selectRegistry.has(name)) {
-				selectRegistry.get(name).data.executeSelect?.(interaction);
+			if (interaction.isAnySelectMenu()) {
+				const name = interaction.customId;
+				if (selectRegistry.has(name)) {
+					selectRegistry.get(name).data.executeSelect?.(interaction);
+				}
+				return;
 			}
-			return;
-		}
-		if (interaction.isButton()) {
-			const name = interaction.customId;
+			if (interaction.isButton()) {
+				const name = interaction.customId;
 
-			if (buttonRegistry.has(name)) {
-				buttonRegistry.get(name).data.executeButton?.(interaction);
+				if (buttonRegistry.has(name)) {
+					buttonRegistry.get(name).data.executeButton?.(interaction);
+				}
+				return;
 			}
-			return;
-		}
-		if (interaction.isModalSubmit()) {
-			const name = interaction.customId;
+			if (interaction.isModalSubmit()) {
+				const name = interaction.customId;
 
-			if (modalRegistry.has(name)) {
-				modalRegistry.get(name).data.executeModal?.(interaction);
+				if (modalRegistry.has(name)) {
+					modalRegistry.get(name).data.executeModal?.(interaction);
+				}
+				return;
 			}
-			return;
-		}
-		if (interaction.isAutocomplete()) {
-			const name = interaction.commandName;
+			if (interaction.isAutocomplete()) {
+				const name = interaction.commandName;
 
-			if (autocompleteRegistry.has(name)) {
-				autocompleteRegistry.get(name).data.executeAutocomplete?.(interaction);
+				if (autocompleteRegistry.has(name)) {
+					autocompleteRegistry
+						.get(name)
+						.data.executeAutocomplete?.(interaction);
+				}
+				return;
 			}
-			return;
+		} catch (error) {
+			console.error(error);
 		}
 		console.error(interaction);
 		// ¯\_(ツ)_/¯ - Uh oh

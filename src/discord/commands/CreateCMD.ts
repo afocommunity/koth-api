@@ -6,16 +6,24 @@ import {
 	MessageFlags,
 	SlashCommandBuilder,
 	ModalSubmitInteraction,
-	ButtonBuilder,
-	ButtonStyle,
 	ButtonInteraction,
 	ComponentType,
 	UserSelectMenuInteraction,
+	TextDisplayBuilder,
 } from 'discord.js';
 import { BaseCommand, BaseCommandBuilder } from './BaseCommand';
 import { FormState } from '@/models/FormState.model';
 import { createId } from '@/utils/createId';
 import { KothUI } from '../KothUI';
+
+const systemAdmins = new Set<string>();
+
+const adminEnv = process.env.ADMINS;
+
+for (const admin of adminEnv.split(',')) {
+	if (admin.trim() === '') continue;
+	systemAdmins.add(admin.trim());
+}
 
 export default class CreateCMD extends BaseCommand {
 	async executeCommand(_interaction: CommandInteraction) {
@@ -36,27 +44,9 @@ export default class CreateCMD extends BaseCommand {
 			});
 			formState.data = JSON.stringify({});
 		}
-		const container = new ContainerBuilder()
-			.setAccentColor(0x0099ff)
-			.addTextDisplayComponents((textDisplay) =>
-				textDisplay.setContent('What are you creating?'),
-			)
-			.addActionRowComponents((row) =>
-				row.setComponents(
-					new ButtonBuilder()
-						.setStyle(ButtonStyle.Primary)
-						.setLabel('Create Token')
-						.setCustomId('createToken'),
-					new ButtonBuilder()
-						.setStyle(ButtonStyle.Primary)
-						.setLabel('Create Server')
-						.setCustomId('createServer'),
-					new ButtonBuilder()
-						.setStyle(ButtonStyle.Secondary)
-						.setLabel('Create Org')
-						.setCustomId('createOrg'),
-				),
-			);
+		const container = KothUI.buildCreateWhatForm(
+			systemAdmins.has(interaction.user.id),
+		);
 		await formState.save();
 		await interaction.editReply({
 			components: [container],
@@ -83,9 +73,42 @@ export default class CreateCMD extends BaseCommand {
 				const response = await interaction.deferUpdate({
 					// flags: MessageFlags.Ephemeral,
 				});
+				if (!systemAdmins.has(interaction.user.id)) {
+					response.edit({
+						components: [
+							new TextDisplayBuilder().setContent(
+								'You do not have permission to run this action',
+							),
+						],
+						flags: [MessageFlags.IsComponentsV2],
+					});
+					return
+				}
 				formState.type = 'createOrg';
+				formState.data = JSON.stringify({});
+				await formState.save();
 				response.edit({
-					components: [KothUI.createNewOrgWindow(JSON.parse(formState.data))],
+					components: [
+						KothUI.buildCreateNewOrgWindow(JSON.parse(formState.data)),
+					],
+					flags: [MessageFlags.IsComponentsV2],
+				});
+				break;
+			}
+			case 'finalizeOrgCreation': {
+				break;
+			}
+			case 'cancelOrgCreation': {
+				const response = await interaction.deferUpdate({
+					// flags: MessageFlags.Ephemeral,
+				});
+				formState.type = 'createItem';
+				formState.data = JSON.stringify({});
+				await formState.save();
+				response.edit({
+					components: [
+						KothUI.buildCreateWhatForm(systemAdmins.has(interaction.user.id)),
+					],
 					flags: [MessageFlags.IsComponentsV2],
 				});
 				break;
@@ -116,7 +139,7 @@ export default class CreateCMD extends BaseCommand {
 		await interaction.deferReply({
 			// flags: MessageFlags.Ephemeral,
 		});
-		const container = KothUI.createNewOrgWindow(formData);
+		const container = KothUI.buildCreateNewOrgWindow(formData);
 
 		// formState.message_id = msg.id;
 		//await formState.save();
@@ -151,8 +174,7 @@ export default class CreateCMD extends BaseCommand {
 				const formData = JSON.parse(formState.data);
 				const user = i.users.at(0);
 				formData.owner = user.id;
-				formData.owner_name = user.username;
-				container = KothUI.createNewOrgWindow(formData);
+				container = KothUI.buildCreateNewOrgWindow(formData);
 				formState.data = JSON.stringify(formData);
 				break;
 			}
@@ -161,14 +183,14 @@ export default class CreateCMD extends BaseCommand {
 				const formData = JSON.parse(formState.data);
 				const users = i.users;
 				formData.admins = users.map((u) => u.id);
-				container = KothUI.createNewOrgWindow(formData);
+				container = KothUI.buildCreateNewOrgWindow(formData);
 				formState.data = JSON.stringify(formData);
 				break;
 			}
 			case 'newOrgInvite': {
 				const formData = JSON.parse(formState.data);
 				await interaction.showModal(
-					KothUI.createNewOrgInviteModal(formData.orgInvite),
+					KothUI.buildCreateNewOrgInviteModal(formData.orgInvite),
 				);
 				try {
 					const r = await interaction.awaitModalSubmit({
@@ -183,11 +205,11 @@ export default class CreateCMD extends BaseCommand {
 					formState.data = JSON.stringify(formData);
 					await formState.save();
 					c.edit({
-						components: [KothUI.createNewOrgWindow(formData)],
+						components: [KothUI.buildCreateNewOrgWindow(formData)],
 						flags: [MessageFlags.IsComponentsV2],
 					});
 				} catch (_) {
-					container = KothUI.createNewOrgWindow(formData);
+					container = KothUI.buildCreateNewOrgWindow(formData);
 					await interaction.update({
 						components: [container],
 						flags: [MessageFlags.IsComponentsV2],
@@ -198,7 +220,7 @@ export default class CreateCMD extends BaseCommand {
 			case 'newOrgName': {
 				const formData = JSON.parse(formState.data);
 				await interaction.showModal(
-					KothUI.createNewOrgNameModal(formData.orgName),
+					KothUI.buildCreateNewOrgNameModal(formData.orgName),
 				);
 				try {
 					const r = await interaction.awaitModalSubmit({
@@ -213,11 +235,11 @@ export default class CreateCMD extends BaseCommand {
 					formState.data = JSON.stringify(formData);
 					await formState.save();
 					c.edit({
-						components: [KothUI.createNewOrgWindow(formData)],
+						components: [KothUI.buildCreateNewOrgWindow(formData)],
 						flags: [MessageFlags.IsComponentsV2],
 					});
 				} catch (_) {
-					container = KothUI.createNewOrgWindow(formData);
+					container = KothUI.buildCreateNewOrgWindow(formData);
 					await interaction.update({
 						components: [container],
 						flags: [MessageFlags.IsComponentsV2],
@@ -239,7 +261,12 @@ export default class CreateCMD extends BaseCommand {
 
 		return {
 			commands: [createCommand],
-			buttons: ['createToken', 'createOrg'],
+			buttons: [
+				'createToken',
+				'createOrg',
+				'finalizeOrgCreation',
+				'cancelOrgCreation',
+			],
 			select: [
 				'createItem',
 				'newOrgOwner',

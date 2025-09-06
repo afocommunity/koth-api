@@ -27,6 +27,11 @@ checkEnvar('DB_USER', false);
 checkEnvar('DB_PASSWORD', false);
 checkEnvar('DB_DATABASE', false);
 checkEnvar('DISCORD_TOKEN', true);
+checkEnvar(
+	'ADMINS',
+	false,
+	'Comma-delimited list of System Administrator discord IDs',
+); // Make this in the Database
 checkEnvar('AUTH_SECRET', false, "openssl rand -base64 172 | tr -d '\\n'");
 
 if (failed) {
