@@ -11,6 +11,12 @@ import { Op } from 'sequelize';
  * - bearerTokenAuth: Ensures that a valid authentication token is present
  */
 export class AuthMiddleware {
+
+	/**
+	 * Middleware to configure the request by validating bearer tokens or API keys
+	 * If valid auth info is found, injects it into res.locals.auth
+	 * Otherwise, proceeds without authentication info
+	 */
 	public static async configureRequest(
 		req: Request,
 		res: Response,
@@ -50,6 +56,12 @@ export class AuthMiddleware {
 		};
 		next();
 	}
+
+	/**
+	 * Middleware to ensure that a valid bearer token or API key is present
+	 * If valid auth info is found in res.locals, proceeds to the next middleware
+	 * Otherwise, responds with a 401 Unauthorized error
+	 */
 	public static async bearerTokenAuth(
 		_req: Request,
 		res: Response,
