@@ -51,6 +51,9 @@ export default class KOTHPlugin extends BasePlugin {
 		this.host = options.apiEndpoint ?? API_ENDPOINT;
 	}
 
+	/**
+	 * Constructs headers for API requests including authorization
+	 */
 	getHeaders() {
 		return {
 			Accept: 'application/json',
@@ -58,6 +61,13 @@ export default class KOTHPlugin extends BasePlugin {
 			Authorization: `Bearer ${this.options.apiToken}`,
 		};
 	}
+
+	/**
+	 * Compares two semantic version strings
+	 * @param {string} version1 - First version string (e.g., "v1.2.3")
+	 * @param {string} version2 - Second version string (e.g., "v1.2.4")
+	 * @return {number} 1 if version1 > version2, -1 if version1 < version2, 0 if equal
+	 */
 	async compareVersions(version1, version2) {
 		const v1Parts = version1.replace('v', '').split('.').map(Number);
 		const v2Parts = version2.replace('v', '').split('.').map(Number);
@@ -73,6 +83,9 @@ export default class KOTHPlugin extends BasePlugin {
 		return 0;
 	}
 
+	/**
+	 * Checks for plugin updates by querying the API endpoint
+	 */
 	async checkForUpdates() {
 		const versionEndpoint = API_ENDPOINT + 'plugin/version';
 		const vResponse = await axios({
@@ -91,6 +104,9 @@ export default class KOTHPlugin extends BasePlugin {
 		return comparisonResult;
 	}
 
+	/**
+	 * Removes existing event files from the log-parser directory
+	 */
 	clearEvents() {
 		for (const event of EVENTS) {
 			const eventFilePath = path.join(eventsFolderPath, event.name);
@@ -98,6 +114,11 @@ export default class KOTHPlugin extends BasePlugin {
 		}
 	}
 
+	/**
+	 * Creates event files in the log-parser directory if they do not exist
+	 * Writes the event file content from the EVENTS array
+	 * Prompts for a restart after creating events
+	 */
 	createEvents() {
 		this.clearEvents();
 		for (const event of EVENTS) {
@@ -116,6 +137,11 @@ export default class KOTHPlugin extends BasePlugin {
 		return pass;
 	}
 
+	/**
+	 * Updates the plugin by downloading the latest version from the API endpoint
+	 * Writes the new version to the plugin file path
+	 * Clears existing events and prompts for a restart
+	 */
 	async update() {
 		const downloadEndpoint = API_ENDPOINT + 'plugin/download';
 		const response = await axios({

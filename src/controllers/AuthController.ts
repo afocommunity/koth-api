@@ -4,6 +4,10 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import ms from 'ms';
 import { Op } from 'sequelize';
 import { CronController } from './CronController';
+
+/**
+ * Controller for managing authentication
+ */
 export class AuthController {
 	public static async setupCron() {
 		CronController.addCron(
@@ -12,6 +16,10 @@ export class AuthController {
 			AuthController.destroyExpiredTokens,
 		);
 	}
+	/**
+	 * Decodes and verifies a JWT token using the AUTH_SECRET
+	 * Returns the decoded payload or null if invalid
+	 */
 	public static async decodeAuthToken(token: string) {
 		let decoded!: string | JwtPayload;
 		try {
@@ -29,6 +37,9 @@ export class AuthController {
 		return decoded;
 	}
 
+	/**
+	 * Creates a new API token for the given org and server
+	 */
 	public static async createApiToken(
 		org_id: string,
 		server_id: string,
@@ -51,11 +62,17 @@ export class AuthController {
 		return { tokenModel, token };
 	}
 
+	/**
+	 * Invalidates (deletes) an API token by its ID
+	 */
 	public static async invalidateApiToken(token_id: string) {
 		const destroyed = await ApiToken.destroy({ where: { id: token_id } });
 		return Boolean(destroyed);
 	}
 
+	/**
+	 * Deletes all expired API tokens from the database
+	 */
 	public static async destroyExpiredTokens() {
 		const now = Date.now();
 		const expiringTokens = await ApiToken.findAll({

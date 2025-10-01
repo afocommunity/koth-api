@@ -17,6 +17,11 @@ import { AuthController } from './controllers/AuthController';
 import { DiscordController } from './controllers/DiscordController';
 const FRONTEND_HOST = process.env.FRONTEND_HOST ?? 'http://localhost:3000';
 const EXPRESS_PORT = process.env.EXPRESS_PORT ?? 3030;
+/**
+ * Creates and configures the Express server
+ * Sets up middleware, routes, and error handling
+ * Starts listening on the specified port
+ */
 export const createServer = async () => {
 	const migrator = createMigrator();
 	await migrator.up();

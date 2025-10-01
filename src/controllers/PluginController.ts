@@ -4,6 +4,11 @@ import { DTO } from '@/utils/DTO';
 import { Request, Response, NextFunction } from 'express';
 
 export class PluginController {
+	/**
+	 * Handles requests to download the plugin file
+	 * If the request's Accept header is application/json, returns the plugin as JSON
+	 * Otherwise, serves the plugin as a JavaScript file with appropriate headers
+	 */
 	public static async reqDownload(
 		req: Request,
 		res: Response,
@@ -19,6 +24,11 @@ export class PluginController {
 			.send(plugin)
 			.end();
 	}
+
+	/**
+	 * Handles requests to get the current plugin version
+	 * Returns a DTO with the current plugin version
+	 */
 	public static async reqVersion(
 		_req: Request,
 		_res: Response,

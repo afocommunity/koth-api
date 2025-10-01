@@ -6,6 +6,13 @@ const DB_USER = process.env.DB_USER;
 const DB_PASSWORD = process.env.DB_PASSWORD;
 const DB_DATABASE = process.env.DB_DATABASE;
 const DB_PORT = process.env.DB_PORT;
+
+/**
+ * Creates and returns a Sequelize instance configured with environment variables
+ * Connects to the specified database using the provided credentials
+ * Loads models from the specified directory
+ * @return {Sequelize} Configured Sequelize instance
+ */
 export const createDatabase = () => {
 	return new Sequelize({
 		database: DB_DATABASE,

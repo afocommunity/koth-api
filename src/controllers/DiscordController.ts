@@ -39,6 +39,9 @@ const modalRegistry = new Collection<string, { data: BaseCommand }>();
 const autocompleteRegistry = new Collection<string, { data: BaseCommand }>();
 const selectRegistry = new Collection<string, { data: BaseCommand }>();
 
+/**
+ * Controller for managing Discord bot interactions
+ */
 export class DiscordController {
 	public static async setupCron() {
 		CronController.addCron(
@@ -47,6 +50,9 @@ export class DiscordController {
 			DiscordController.clearExpiredForms,
 		);
 	}
+	/**
+	 * Deletes all expired form states from the database
+	 */
 	public static async clearExpiredForms() {
 		const now = Date.now();
 		const expires_in = 1000 * 60 * 15;
@@ -61,20 +67,33 @@ export class DiscordController {
 			where: { updatedAt: { [Op.lte]: now + expires_in } },
 		});
 	}
+
+	/**
+	 * Returns the Discord client if ready, otherwise null
+	 */
 	public static get client(): Client<true> | null {
 		if (DiscordController.ready) return client as Client<true>;
 		return null;
 	}
+
 	public static get enabled() {
 		return isEnabled;
 	}
 	public static get ready() {
 		return isReady;
 	}
-	/**For actions that MUST run on startup, but wait for ready */
+	/**
+	 * Promise that resolves when the Discord client is ready
+	 */
 	public static get readyPromise() {
 		return readyPromise;
 	}
+
+	/**
+	 * Initializes and logs in the Discord client
+	 * Sets up event handlers for ready and interaction events
+	 * Also loads and registers commands
+	 */
 	public static async setup() {
 		if (!DiscordController.enabled) return;
 		client = new Client({
@@ -85,6 +104,9 @@ export class DiscordController {
 		client.on(Events.InteractionCreate, DiscordController.onInteraction);
 	}
 
+	/**
+	 * Handles incoming Discord interactions and routes them to the appropriate command handlers
+	 */
 	public static async onInteraction(interaction: Interaction<CacheType>) {
 		console.log(
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -138,6 +160,10 @@ export class DiscordController {
 		// ¯\_(ツ)_/¯ - Uh oh
 	}
 
+	/**
+	 * Called when the Discord client is ready
+	 * Sets presence, logs status, and sets up commands
+	 */
 	public static async onReady() {
 		isReady = true;
 		resolve(true);
@@ -156,6 +182,11 @@ export class DiscordController {
 		DiscordController.setupCommands();
 	}
 
+	/**
+	 * Loads command modules from the filesystem and registers them
+	 * Populates the command, button, modal, autocomplete, and select registries
+	 * Calls registerCommands to register slash commands with Discord
+	 */
 	public static async setupCommands() {
 		const root = path.resolve(__dirname, '../discord/commands');
 		const files = fs.readdirSync(root);
@@ -207,6 +238,9 @@ export class DiscordController {
 		// DiscordController.registerCommands(); //? Register command changes
 	}
 
+	/**
+	 * Registers slash commands with Discord via the REST API
+	 */
 	public static async registerCommands() {
 		console.info(`Registering ${commandRegistry.size} commands`);
 		const rest = new REST().setToken(process.env.DISCORD_TOKEN);

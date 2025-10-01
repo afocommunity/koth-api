@@ -18,7 +18,14 @@ type NewOrgFormState = {
 	owner?: string;
 	admins?: string[];
 };
+
+/**
+ * Utility class for building Discord UI components related to KOTH
+ */
 export class KothUI {
+	/**
+	 * Builds a container for creating a new organization
+	 */
 	public static buildCreateNewOrgWindow(formState: NewOrgFormState) {
 		const container = new ContainerBuilder().setAccentColor(0x0099ff);
 		container.addTextDisplayComponents((textDisplay) =>
@@ -165,6 +172,10 @@ export class KothUI {
 			);
 		return container;
 	}
+
+	/**
+	 * Builds a modal for setting the organization name
+	 */
 	public static buildCreateNewOrgNameModal(currentName?: string) {
 		const modal = new ModalBuilder();
 		const input = new TextInputBuilder()
@@ -184,6 +195,10 @@ export class KothUI {
 			);
 		return modal;
 	}
+
+	/**
+	 * Builds a modal for setting the organization Discord invite link
+	 */
 	public static buildCreateNewOrgInviteModal(currentInvite?: string) {
 		const modal = new ModalBuilder();
 		const input = new TextInputBuilder()
@@ -204,6 +219,10 @@ export class KothUI {
 			);
 		return modal;
 	}
+
+	/**
+	 * Builds a container for the initial "What are you creating?" prompt
+	 */
 	public static buildCreateWhatForm(enableOrg: boolean = true) {
 		const container = new ContainerBuilder()
 			.setAccentColor(0x0099ff)

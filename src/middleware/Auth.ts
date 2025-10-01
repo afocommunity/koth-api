@@ -5,6 +5,11 @@ import { NextFunction, Request, Response } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import { Op } from 'sequelize';
 
+/**
+ * Middleware for handling authentication and authorization
+ * - configureRequest: Validates bearer tokens or API keys and injects auth info into res.locals
+ * - bearerTokenAuth: Ensures that a valid authentication token is present
+ */
 export class AuthMiddleware {
 	public static async configureRequest(
 		req: Request,

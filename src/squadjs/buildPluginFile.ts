@@ -2,7 +2,14 @@ import fs from 'fs';
 import path from 'path';
 import { CURRENT_PLUGIN_VERSION } from './CURRENT_PLUGIN_VERSION';
 
-const buildEvents = async () => {
+/**
+ * Reads event files from the events directory
+ * Returns an array of event objects with name and file content
+ * @return Array of event definitions
+ */
+const buildEvents = async (): Promise<
+	Array<{ name: string; file: string }>
+> => {
 	const events: Array<{ name: string; file: string }> = [];
 	const files = await fs.promises.opendir(path.join(__dirname, './events'));
 	for await (const file of files) {
@@ -16,6 +23,11 @@ const buildEvents = async () => {
 	return events;
 };
 
+/**
+ * Builds the plugin file by embedding event definitions and configuration
+ * Reads the base plugin file and injects dynamic content
+ * Returns the complete plugin code as a string
+ */
 export const buildPlugin = async () => {
 	const events = await buildEvents();
 	const squadJSPluginRaw = fs
