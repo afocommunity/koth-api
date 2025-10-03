@@ -15,7 +15,7 @@ import {
 	PrimaryKey,
 	Table,
 } from 'sequelize-typescript';
-import { PlayerSave } from './PlayerSave.model';
+import { PlayerSave } from './player-save.model';
 
 @Table({ timestamps: false, tableName: 'player_loadouts' })
 export class LoadoutItem extends Model<

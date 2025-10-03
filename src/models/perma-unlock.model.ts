@@ -15,12 +15,12 @@ import {
 	PrimaryKey,
 	Table,
 } from 'sequelize-typescript';
-import { PlayerSave } from './PlayerSave.model';
+import { PlayerSave } from './player-save.model';
 
-@Table({ timestamps: false, tableName: 'player_weapon_xp' })
-export class WeaponXP extends Model<
-	InferAttributes<WeaponXP>,
-	InferCreationAttributes<WeaponXP>
+@Table({ timestamps: false, tableName: 'player_perma_unlocks' })
+export class PermaUnlocks extends Model<
+	InferAttributes<PermaUnlocks>,
+	InferCreationAttributes<PermaUnlocks>
 > {
 	@PrimaryKey
 	@Default(createId)
@@ -34,7 +34,5 @@ export class WeaponXP extends Model<
 	declare readonly PlayerSave: NonAttribute<Awaited<PlayerSave>>;
 
 	@Column(DataType.STRING)
-	declare weapon_name: string;
-	@Column(DataType.INTEGER)
-	declare xp: number;
+	declare unlock_name: string;
 }

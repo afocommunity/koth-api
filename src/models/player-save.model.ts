@@ -19,11 +19,11 @@ import {
 	Scopes,
 	Table,
 } from 'sequelize-typescript';
-import { LoadoutItem } from './LoadoutItem.model';
+import { LoadoutItem } from './loudout-item.model';
 import { createId } from '@paralleldrive/cuid2';
-import { Player } from './Player.model';
-import { WeaponXP } from './WeaponXP.model';
-import { PermaUnlocks } from './PermaUnlocks.model';
+import { Player } from '../services/player/player.model';
+import { WeaponXP } from './weapon-xp.model';
+import { PermaUnlocks } from './perma-unlock.model';
 
 @Scopes(() => ({
 	loadout: { include: { model: LoadoutItem, as: 'Loadout' } },
