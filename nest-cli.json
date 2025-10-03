@@ -1,11 +1,11 @@
 {  "compilerOptions": {
     "assets": [
       {
-        "include": "./plugin-file/squadjs/events",
+        "include": "./services/plugin-file/squadjs/events",
         "outDir": "build/"
       },
       {
-        "include": "./plugin-file/squadjs/plugins",
+        "include": "./services/plugin-file/squadjs/plugins",
         "outDir": "build/"
       }
     ],
