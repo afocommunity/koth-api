@@ -7,10 +7,21 @@ import {
 } from '@nestjs/common';
 import { GetPlayerQueryDto } from './dtos/get-player-query.dto';
 import { PlayerService } from './player.service';
+import {
+	ApiNotFoundResponse,
+	ApiOkResponse,
+	ApiOperation,
+} from '@nestjs/swagger';
 
 @Controller('player')
 export class PlayerController {
 	constructor(private readonly playerService: PlayerService) {}
+
+	@ApiOperation({ summary: 'Find a player by ID' })
+	@ApiOkResponse({
+		description: 'A Player Object',
+	})
+	@ApiNotFoundResponse({ description: 'Player not found' })
 	@Get('/:player_id')
 	public async findPlayer(
 		@Param('player_id') id: string,
