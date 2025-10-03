@@ -8,6 +8,8 @@
 		"@paralleldrive/cuid2": "2.2.2",
 		"axios": "1.12.2",
 		"bufferutil": "4.0.9",
+		"class-transformer": "^0.5.1",
+		"class-validator": "^0.14.2",
 		"colors": "1.4.0",
 		"compression": "1.8.1",
 		"cors": "2.8.5",
