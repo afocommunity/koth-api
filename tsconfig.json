@@ -2,18 +2,18 @@
   "compilerOptions": {
     "lib": ["ESNext"],
     "target": "esnext",
-    
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
     "module": "commonjs",
     "outDir": "build",
-    "rootDir": "src_old",
+    "rootDir": "src",
     "esModuleInterop": true,
-    "baseUrl": "src_old",
+    "baseUrl": "src",
     "paths": {
       "@/*": ["./*"]
     }
   },
-  "include": ["src_old"],
+  "include": ["src"],
   "exclude": ["node_modules"]
 }

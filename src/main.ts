@@ -3,6 +3,6 @@ import { PluginFileModule } from './plugin-file/plugin-file.module';
 
 async function bootstrap() {
 	const app = await NestFactory.create(PluginFileModule);
-	await app.listen(3000);
+	await app.listen(3131);
 }
 bootstrap();
