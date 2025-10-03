@@ -13,8 +13,6 @@ import { WeaponXP } from './models/WeaponXP.model';
 @Module({
 	imports: [
 		ConfigModule.forRoot(),
-		PlayerModule,
-		PluginFileModule,
 		SequelizeModule.forRoot({
 			database: process.env.DB_DATABASE,
 			dialect: process.env.DB_DIALECT as 'mysql' | 'mariadb' | 'postgres',
@@ -31,8 +29,9 @@ import { WeaponXP } from './models/WeaponXP.model';
 				PlayerSave,
 				WeaponXP,
 			],
-			synchronize: true,
 		}),
+		PlayerModule,
+		PluginFileModule,
 	],
 })
 export class AppModule {}
