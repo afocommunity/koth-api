@@ -2,8 +2,11 @@
 	"name": "koth-api",
 	"private": true,
 	"dependencies": {
+		"@nestjs/common": "11.1.6",
+		"@nestjs/core": "11.1.6",
+		"@nestjs/platform-express": "11.1.6",
 		"@paralleldrive/cuid2": "2.2.2",
-		"axios": "1.11.0",
+		"axios": "1.12.2",
 		"bufferutil": "4.0.9",
 		"colors": "1.4.0",
 		"compression": "1.8.1",
@@ -20,34 +23,34 @@
 		"sequelize-typescript": "2.1.6",
 		"umzug": "3.8.2",
 		"zlib-sync": "0.1.10",
-		"zod": "4.1.5"
+		"zod": "4.1.11"
 	},
 	"scripts": {
 		"dev": "dotenv -- nodemon --exec \"node -r @swc-node/register ./src/index.ts\" -e .ts",
 		"lint:fix": "tsc --noEmit && npx eslint ./src --fix && npx prettier ./src --write"
 	},
 	"devDependencies": {
-		"@eslint/js": "9.35.0",
+		"@eslint/js": "9.36.0",
 		"@swc-node/register": "1.11.1",
-		"@swc/core": "1.13.5",
+		"@swc/core": "1.13.20",
 		"@types/compression": "1.8.1",
 		"@types/cors": "2.8.19",
 		"@types/express": "5.0.3",
 		"@types/jsonwebtoken": "9.0.10",
 		"@types/morgan": "1.9.10",
 		"@types/ms": "2.1.0",
-		"@types/node": "24.3.1",
-		"dotenv": "17.2.2",
+		"@types/node": "24.6.2",
+		"dotenv": "17.2.3",
 		"dotenv-cli": "10.0.0",
-		"eslint": "9.35.0",
+		"eslint": "9.36.0",
 		"eslint-plugin-prettier": "5.5.4",
 		"eslint-plugin-simple-import-sort": "12.1.1",
-		"globals": "16.3.0",
-		"jiti": "2.5.1",
+		"globals": "16.4.0",
+		"jiti": "2.6.1",
 		"nodemon": "3.1.10",
 		"prettier": "3.6.2",
-		"typescript": "5.9.2",
-		"typescript-eslint": "8.42.0"
+		"typescript": "5.9.3",
+		"typescript-eslint": "8.45.0"
 	},
 	"packageManager": "yarn@4.9.4"
 }
