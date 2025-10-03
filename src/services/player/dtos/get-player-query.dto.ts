@@ -1,13 +1,13 @@
-import { IsOptional, IsEnum, IsString } from 'class-validator';
+import { IsOptional, IsEnum, IsString, isArray } from 'class-validator';
 
 export class GetPlayerQueryDto {
 	@IsOptional()
-	@IsString()
-	include: string = 'native';
+	@IsString({ each: true })
+	include?: string | string[];
 
 	@IsOptional()
 	@IsEnum(['native', 'steam', 'eos'], {
 		message: 'by must be one of: native, steam, eos',
 	})
-	by: string = 'native';
+	by: 'native' | 'steam' | 'eos';
 }

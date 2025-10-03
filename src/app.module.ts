@@ -3,13 +3,13 @@ import { PlayerModule } from './services/player/player.module';
 import { PluginFileModule } from './services/plugin-file/plugin-file.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
-import { ApiToken } from './models/ApiToken.model';
-import { FormState } from './models/FormState.model';
-import { LoadoutItem } from './models/LoadoutItem.model';
-import { PermaUnlocks } from './models/PermaUnlocks.model';
-import { Player } from './models/Player.model';
-import { PlayerSave } from './models/PlayerSave.model';
-import { WeaponXP } from './models/WeaponXP.model';
+import { ApiToken } from './models/api-token.model';
+import { FormState } from './models/form-state.model';
+import { LoadoutItem } from './models/loudout-item.model';
+import { PermaUnlocks } from './models/perma-unlock.model';
+import { Player } from './services/player/player.model';
+import { PlayerSave } from './models/player-save.model';
+import { WeaponXP } from './models/weapon-xp.model';
 import { AuthModule } from './services/auth/auth.module';
 @Module({
 	imports: [
