@@ -87,7 +87,7 @@ export default class KOTHPlugin extends BasePlugin {
    * Checks for plugin updates by querying the API endpoint
    */
   async checkForUpdates() {
-    const versionEndpoint = API_ENDPOINT + 'plugin/version';
+    const versionEndpoint = API_ENDPOINT + 'plugin-file/version';
     const vResponse = await axios({
       url: versionEndpoint,
       method: 'GET',
@@ -99,7 +99,7 @@ export default class KOTHPlugin extends BasePlugin {
     }
     const comparisonResult = await this.compareVersions(
       CURRENT_PLUGIN_VERSION,
-      vResponse.data.data,
+      vResponse.data,
     );
     return comparisonResult;
   }
@@ -143,7 +143,7 @@ export default class KOTHPlugin extends BasePlugin {
    * Clears existing events and prompts for a restart
    */
   async update() {
-    const downloadEndpoint = API_ENDPOINT + 'plugin/download';
+    const downloadEndpoint = API_ENDPOINT + 'plugin-file/download';
     const response = await axios({
       url: downloadEndpoint,
       method: 'GET',
@@ -155,7 +155,7 @@ export default class KOTHPlugin extends BasePlugin {
     }
     this.clearEvents();
 
-    fs.writeFileSync(pluginFilePath, response.data.data);
+    fs.writeFileSync(pluginFilePath, response.data);
     this.verbose(1, chalk.red('Plugin Updated. Please restart SquadJS.'));
   }
 
