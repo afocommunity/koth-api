@@ -2,6 +2,7 @@
   "compilerOptions": {
     "lib": ["ESNext"],
     "target": "esnext",
+    
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "module": "commonjs",
