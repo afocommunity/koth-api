@@ -438,6 +438,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nestjs/schedule@npm:^6.0.1":
+  version: 6.0.1
+  resolution: "@nestjs/schedule@npm:6.0.1"
+  dependencies:
+    cron: "npm:4.3.3"
+  peerDependencies:
+    "@nestjs/common": ^10.0.0 || ^11.0.0
+    "@nestjs/core": ^10.0.0 || ^11.0.0
+  checksum: 10c0/220af7977cc93f831223ac750dff5af64ce5d0e46a4970a8221e7ae233524fd6d0137ec0a5ecf12c5e6cb3d3acc9d7d0a8aa1525c053f8cdcfb26e4a0db283a8
+  languageName: node
+  linkType: hard
+
 "@nestjs/sequelize@npm:11.0.0":
   version: 11.0.0
   resolution: "@nestjs/sequelize@npm:11.0.0"
@@ -3305,6 +3317,7 @@ __metadata:
     "@nestjs/core": "npm:11.1.6"
     "@nestjs/jwt": "npm:^11.0.0"
     "@nestjs/platform-express": "npm:11.1.6"
+    "@nestjs/schedule": "npm:^6.0.1"
     "@nestjs/sequelize": "npm:11.0.0"
     "@nestjs/swagger": "npm:^11.2.0"
     "@nestjs/throttler": "npm:6.4.0"

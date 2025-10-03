@@ -1,7 +1,12 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import {
+	Controller,
+	Get,
+	Param,
+	Query,
+	NotFoundException,
+} from '@nestjs/common';
 import { GetPlayerQueryDto } from './dtos/get-player-query.dto';
 import { PlayerService } from './player.service';
-import { NotFoundException } from '@nestjs/common';
 
 @Controller('player')
 export class PlayerController {

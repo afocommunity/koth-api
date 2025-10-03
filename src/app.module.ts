@@ -11,6 +11,7 @@ import { Player } from './services/player/player.model';
 import { PlayerSave } from './models/player-save.model';
 import { WeaponXP } from './models/weapon-xp.model';
 import { AuthModule } from './services/auth/auth.module';
+import { ScheduleModule } from '@nestjs/schedule';
 @Module({
 	imports: [
 		ConfigModule.forRoot(),
@@ -31,6 +32,7 @@ import { AuthModule } from './services/auth/auth.module';
 				WeaponXP,
 			],
 		}),
+		ScheduleModule.forRoot(),
 		AuthModule,
 		PlayerModule,
 		PluginFileModule,

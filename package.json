@@ -8,6 +8,7 @@
 		"@nestjs/core": "11.1.6",
 		"@nestjs/jwt": "^11.0.0",
 		"@nestjs/platform-express": "11.1.6",
+		"@nestjs/schedule": "^6.0.1",
 		"@nestjs/sequelize": "11.0.0",
 		"@nestjs/swagger": "^11.2.0",
 		"@nestjs/throttler": "6.4.0",
