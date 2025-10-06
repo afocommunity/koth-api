@@ -3,7 +3,7 @@
  * Properties injected on kApi Build:
  *
  * EVENTS
- * { name: string, file: string }
+ * Array<{ name: string, file: string }>
  *
  * CURRENT_PLUGIN_VERSION
  * string
