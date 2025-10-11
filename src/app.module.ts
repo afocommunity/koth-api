@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { PlayerModule } from './services/player/player.module';
+import { PlayerSyncModule } from './services/player-sync/player-sync.module';
 import { PluginFileModule } from './services/plugin-file/plugin-file.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ConfigModule } from '@nestjs/config';
@@ -35,6 +36,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 		ScheduleModule.forRoot(),
 		AuthModule,
 		PlayerModule,
+		PlayerSyncModule,
 		PluginFileModule,
 	],
 })

@@ -11,6 +11,15 @@ async function bootstrap() {
 		.setTitle('KOTH API')
 		.setDescription('API for interfacing with KapiSync')
 		.setVersion('1.0')
+		.addBearerAuth(
+			{
+				type: 'http',
+				scheme: 'bearer',
+				bearerFormat: 'API Token',
+				description: 'Enter your API token',
+			},
+			'bearer',
+		)
 		.build();
 	const documentFactory = () => SwaggerModule.createDocument(app, config);
 	SwaggerModule.setup('api-docs', app, documentFactory, {
