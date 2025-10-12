@@ -13,6 +13,7 @@ import { PlayerSave } from './models/player-save.model';
 import { WeaponXP } from './models/weapon-xp.model';
 import { AuthModule } from './services/auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { DataStreamModule } from './services/data-stream/data-stream.module';
 @Module({
 	imports: [
 		ConfigModule.forRoot(),
@@ -35,6 +36,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 		}),
 		ScheduleModule.forRoot(),
 		AuthModule,
+		DataStreamModule,
 		PlayerModule,
 		PlayerSyncModule,
 		PluginFileModule,

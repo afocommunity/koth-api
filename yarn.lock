@@ -4553,6 +4553,7 @@ __metadata:
     sequelize: "npm:6.37.7"
     sequelize-cli: "npm:6.6.3"
     sequelize-typescript: "npm:2.1.6"
+    socket.io: "npm:^4.8.1"
     typescript: "npm:5.9.3"
     typescript-eslint: "npm:8.46.0"
     umzug: "npm:3.8.2"
@@ -6246,7 +6247,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"socket.io@npm:4.8.1":
+"socket.io@npm:4.8.1, socket.io@npm:^4.8.1":
   version: 4.8.1
   resolution: "socket.io@npm:4.8.1"
   dependencies:

@@ -22,6 +22,6 @@ import { AuthModule } from '../auth/auth.module';
 	],
 	controllers: [PlayerSyncController],
 	providers: [PlayerSyncService],
-	exports: [PlayerSyncService],
+	exports: [SequelizeModule, PlayerSyncService],
 })
 export class PlayerSyncModule {}
