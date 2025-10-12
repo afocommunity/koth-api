@@ -28,6 +28,14 @@ import { PermaUnlocks } from './perma-unlock.model';
 @Scopes(() => ({
 	loadout: { include: { model: LoadoutItem, as: 'Loadout' } },
 	weapon_xp: { include: { model: WeaponXP, as: 'WeaponXP' } },
+	perma_unlocks: { include: { model: PermaUnlocks, as: 'PermaUnlocks' } },
+	all: {
+		include: [
+			{ model: LoadoutItem, as: 'Loadout' },
+			{ model: WeaponXP, as: 'WeaponXP' },
+			{ model: PermaUnlocks, as: 'PermaUnlocks' },
+		],
+	},
 }))
 @Table({ timestamps: true, tableName: 'player_saves' })
 export class PlayerSave extends Model<

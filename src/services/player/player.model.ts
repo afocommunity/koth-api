@@ -21,6 +21,7 @@ import { PlayerSave } from '../../models/player-save.model';
 
 import { LoadoutItem } from '../../models/loudout-item.model';
 import { WeaponXP } from '../../models/weapon-xp.model';
+import { PermaUnlocks } from '../../models/perma-unlock.model';
 import { ApiProperty, ApiSchema } from '@nestjs/swagger';
 
 @ApiSchema({ name: 'Player', description: 'Player Model' })
@@ -32,6 +33,7 @@ import { ApiProperty, ApiSchema } from '@nestjs/swagger';
 			include: [
 				{ model: LoadoutItem, as: 'Loadout' },
 				{ model: WeaponXP, as: 'WeaponXP' },
+				{ model: PermaUnlocks, as: 'PermaUnlocks' },
 			],
 		},
 	},

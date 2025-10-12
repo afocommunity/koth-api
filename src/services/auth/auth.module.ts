@@ -3,6 +3,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ApiToken } from '@/models/api-token.model';
+import { ApiTokenGuard } from './guards/api-token.guard';
 // import { AuthController } from './';
 
 @Module({
@@ -14,8 +15,8 @@ import { ApiToken } from '@/models/api-token.model';
 		}),
 		SequelizeModule.forFeature([ApiToken]),
 	],
-	providers: [AuthService],
-	exports: [AuthService, SequelizeModule],
+	providers: [AuthService, ApiTokenGuard],
+	exports: [AuthService, ApiTokenGuard, SequelizeModule],
 	// controllers: [AuthController]
 })
 export class AuthModule {}
