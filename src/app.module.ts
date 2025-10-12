@@ -47,8 +47,8 @@ import { DiscordModule } from './services/discord/discord.module';
 				token: process.env.DISCORD_TOKEN,
 				intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages],
 				development:
-					process.env.DISCORD_DEVELOPMENT_GUILD_ID != null
-						? [process.env.DISCORD_DEVELOPMENT_GUILD_ID]
+					process.env.DISCORD_DEVELOPMENT_MODE == 'true'
+						? [process.env.DISCORD_GUILD_ID]
 						: false,
 				presence: {
 					status: PresenceUpdateStatus.Online,
