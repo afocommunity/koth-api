@@ -10,7 +10,9 @@ import {
 import { Type } from 'class-transformer';
 
 class LoadoutItemDto {
-	@ApiProperty({ description: 'Loadout family name (e.g., "primary", "secondary")' })
+	@ApiProperty({
+		description: 'Loadout family name (e.g., "primary", "secondary")',
+	})
 	@IsString()
 	family_name: string;
 

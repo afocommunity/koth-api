@@ -179,7 +179,8 @@ export class PlayerSyncService {
 				index,
 				eos_id: players[index].eos_id,
 				status: result.status,
-				error: result.status === 'rejected' ? result.reason?.message : undefined,
+				error:
+					result.status === 'rejected' ? result.reason?.message : undefined,
 			})),
 		};
 	}
