@@ -4,7 +4,7 @@ import { PlayerModule } from './services/player/player.module';
 import { PlayerSyncModule } from './services/player-sync/player-sync.module';
 import { PluginFileModule } from './services/plugin-file/plugin-file.module';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { ConfigModule } from '@nestjs/config';
+import { ConditionalModule, ConfigModule } from '@nestjs/config';
 import { ApiToken } from './models/api-token.model';
 import { FormState } from './models/form-state.model';
 import { LoadoutItem } from './models/loudout-item.model';
@@ -42,23 +42,32 @@ import { DiscordModule } from './services/discord/discord.module';
 			],
 		}),
 		ScheduleModule.forRoot(),
-		NecordModule.forRoot({
-			token: process.env.DISCORD_TOKEN,
-			intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages],
-			development: [process.env.DISCORD_DEVELOPMENT_GUILD_ID],
-			presence: {
-				status: PresenceUpdateStatus.Online,
-				activities: [
-					{
-						name: 'King of the Hill',
-						type: ActivityType.Custom,
-						url: 'https://discord.gg/kingofthehill',
-						state: 'Capturing the Point',
-					},
-				],
-			},
-		}),
-		DiscordModule,
+		ConditionalModule.registerWhen(
+			NecordModule.forRoot({
+				token: process.env.DISCORD_TOKEN,
+				intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages],
+				development:
+					process.env.DISCORD_DEVELOPMENT_GUILD_ID != null
+						? [process.env.DISCORD_DEVELOPMENT_GUILD_ID]
+						: false,
+				presence: {
+					status: PresenceUpdateStatus.Online,
+					activities: [
+						{
+							name: 'King of the Hill',
+							type: ActivityType.Custom,
+							url: 'https://discord.gg/kingofthehill',
+							state: 'Capturing the Point',
+						},
+					],
+				},
+			}),
+			(env) => env.DISCORD_TOKEN != null,
+		),
+		ConditionalModule.registerWhen(
+			DiscordModule,
+			(env) => env.DISCORD_TOKEN != null,
+		),
 		AuthModule,
 		DataStreamModule,
 		PlayerModule,

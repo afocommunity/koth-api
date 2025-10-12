@@ -1,5 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { AttachmentBuilder, Client, ContainerBuilder, MessageFlags } from 'discord.js';
+import {
+	AttachmentBuilder,
+	Client,
+	ContainerBuilder,
+	MessageFlags,
+} from 'discord.js';
 import {
 	Context,
 	ContextOf,
@@ -27,7 +32,10 @@ export class DiscordDownloadPluginService {
 		this.logger.warn(message);
 	}
 
-	@SlashCommand({ name: 'download', description: 'Download the latest version of the KothSync plugin' })
+	@SlashCommand({
+		name: 'download',
+		description: 'Download the latest version of the KothSync plugin',
+	})
 	public async downloadPlugin(@Context() [interaction]: SlashCommandContext) {
 		await interaction.deferReply({
 			// flags: MessageFlags.Ephemeral,
