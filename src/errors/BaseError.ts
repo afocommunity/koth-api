@@ -14,7 +14,7 @@ const kCode = Symbol.for('kCode');
  */
 export class BaseError extends Error {
 	public readonly [kCode]: string;
-	constructor(type: string, error: any) {
+	constructor(type: string, error?: any) {
 		super(error);
 		this[kCode] = type;
 		if (Error.captureStackTrace != null) {
