@@ -137,3 +137,6 @@ dist
 
 dist/
 build/
+
+# Claude Code
+CLAUDE.md
