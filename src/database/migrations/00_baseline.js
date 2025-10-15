@@ -152,7 +152,7 @@ module.exports = {
         type: DataType.DATE(),
       },
     });
-  }, down: async ({ context: sequelize }) => {
+  }, down: async (sequelize) => {
     await sequelize.dropTable('player_loadouts');
     await sequelize.dropTable('player_saves');
     await sequelize.dropTable('player_weapon_xp');

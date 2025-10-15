@@ -22,6 +22,6 @@ export const up = async (sequelize, DataType) => {
     },
   });
 };
-export const down = async ({ context: sequelize }) => {
+export const down = async (sequelize) => {
   await sequelize.dropTable('form_state');
 }

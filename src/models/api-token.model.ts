@@ -1,6 +1,6 @@
 import {
 	CreationOptional,
-	ForeignKey,
+	ForeignKey as ForeignKeyType,
 	InferAttributes,
 	InferCreationAttributes,
 	NonAttribute,
@@ -9,6 +9,7 @@ import {
 	BelongsTo,
 	Column,
 	DataType,
+	ForeignKey,
 	Model,
 	PrimaryKey,
 	Table,
@@ -25,11 +26,13 @@ export class ApiToken extends Model<
 	@Column(DataType.STRING(26))
 	declare id: CreationOptional<string>;
 
+	@ForeignKey(() => Organization)
 	@Column(DataType.STRING(26))
-	declare org_id: ForeignKey<Organization['id']>;
+	declare org_id: ForeignKeyType<Organization['id']>;
 
+	@ForeignKey(() => Server)
 	@Column(DataType.STRING(26))
-	declare server_id: ForeignKey<Server['id']>;
+	declare server_id: ForeignKeyType<Server['id']>;
 
 	@Column(DataType.DATE)
 	declare expiresAt: Date;

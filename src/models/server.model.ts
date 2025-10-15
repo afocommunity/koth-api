@@ -1,6 +1,6 @@
 import {
 	CreationOptional,
-	ForeignKey,
+	ForeignKey as ForeignKeyType,
 	InferAttributes,
 	InferCreationAttributes,
 	NonAttribute,
@@ -10,6 +10,7 @@ import {
 	Column,
 	DataType,
 	Default,
+	ForeignKey,
 	HasOne,
 	Model,
 	PrimaryKey,
@@ -29,8 +30,9 @@ export class Server extends Model<
 	@Column(DataType.STRING(26))
 	declare id: CreationOptional<string>;
 
+	@ForeignKey(() => Organization)
 	@Column(DataType.STRING(26))
-	declare org_id: ForeignKey<Organization['id']>;
+	declare org_id: ForeignKeyType<Organization['id']>;
 
 	@Column(DataType.STRING(255))
 	declare name: string;
