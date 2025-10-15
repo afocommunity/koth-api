@@ -41,7 +41,7 @@ export class AuthService {
 	}
 
 	async findAllApiTokens(org_id?: string, server_id?: string) {
-		const where: any = {};
+		const where: WhereOptions<InferAttributes<ApiToken>> = {};
 		if (org_id) where.org_id = org_id;
 		if (server_id) where.server_id = server_id;
 
