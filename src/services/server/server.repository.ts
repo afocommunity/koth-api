@@ -6,7 +6,7 @@ import { UpdateServerDto } from './dtos/update-server.dto';
 import { createId } from '@/utils/createId';
 
 @Injectable()
-export class ServerService {
+export class ServerRepository {
 	constructor(
 		@InjectModel(Server)
 		private readonly serverModel: typeof Server,

@@ -6,7 +6,7 @@ import { UpdateOrganizationDto } from './dtos/update-organization.dto';
 import { createId } from '@/utils/createId';
 
 @Injectable()
-export class OrganizationService {
+export class OrganizationRepository {
 	constructor(
 		@InjectModel(Organization)
 		private readonly organizationModel: typeof Organization,
