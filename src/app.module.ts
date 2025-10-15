@@ -8,9 +8,11 @@ import { ConditionalModule, ConfigModule } from '@nestjs/config';
 import { ApiToken } from './models/api-token.model';
 import { FormState } from './models/form-state.model';
 import { LoadoutItem } from './models/loudout-item.model';
+import { Organization } from './models/organization.model';
 import { PermaUnlocks } from './models/perma-unlock.model';
 import { Player } from './services/player/player.model';
 import { PlayerSave } from './models/player-save.model';
+import { Server } from './models/server.model';
 import { WeaponXP } from './models/weapon-xp.model';
 import { AuthModule } from './services/auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -35,9 +37,11 @@ import { DiscordModule } from './services/discord/discord.module';
 				ApiToken,
 				FormState,
 				LoadoutItem,
+				Organization,
 				PermaUnlocks,
 				Player,
 				PlayerSave,
+				Server,
 				WeaponXP,
 			],
 		}),
