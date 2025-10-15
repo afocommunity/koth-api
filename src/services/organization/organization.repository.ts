@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Organization } from '@/models/organization.model';
 import { CreateOrganizationDto } from './dtos/create-organization.dto';
 import { UpdateOrganizationDto } from './dtos/update-organization.dto';
 import { createId } from '@/utils/createId';
+import { DataNotFoundError } from '@/errors/DataNotFoundError';
 
 @Injectable()
 export class OrganizationRepository {
@@ -28,7 +29,7 @@ export class OrganizationRepository {
 	async findOne(id: string) {
 		const organization = await this.organizationModel.findByPk(id);
 		if (!organization) {
-			throw new NotFoundException(`Organization with ID ${id} not found`);
+			throw new DataNotFoundError(`Organization with ID ${id} not found`);
 		}
 		return organization;
 	}
