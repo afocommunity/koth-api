@@ -20,7 +20,6 @@ export class BaseError extends Error {
 		if (Error.captureStackTrace != null) {
 			Error.captureStackTrace(this, BaseError);
 		}
-		this.raiseTrace();
 	}
 
 	public get name() {
