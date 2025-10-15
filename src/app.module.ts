@@ -17,6 +17,8 @@ import { WeaponXP } from './models/weapon-xp.model';
 import { AuthModule } from './services/auth/auth.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { DataStreamModule } from './services/data-stream/data-stream.module';
+import { OrganizationModule } from './services/organization/organization.module';
+import { ServerModule } from './services/server/server.module';
 import {
 	ActivityType,
 	GatewayIntentBits,
@@ -74,9 +76,11 @@ import { DiscordModule } from './services/discord/discord.module';
 		),
 		AuthModule,
 		DataStreamModule,
+		OrganizationModule,
 		PlayerModule,
 		PlayerSyncModule,
 		PluginFileModule,
+		ServerModule,
 	],
 })
 export class AppModule {}
