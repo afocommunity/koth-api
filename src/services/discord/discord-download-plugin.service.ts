@@ -32,7 +32,9 @@ export class DiscordDownloadPluginService {
 		name: 'download',
 		description: 'Download the latest version of the KothSync plugin',
 	})
-	public async downloadPlugin(@Context() [interaction]: SlashCommandContext) {
+	public async downloadPluginCmd(
+		@Context() [interaction]: SlashCommandContext,
+	) {
 		await interaction.deferReply({
 			// flags: MessageFlags.Ephemeral,
 		});

@@ -5,6 +5,7 @@ import {
 	ButtonBuilder,
 	ButtonStyle,
 	ContainerBuilder,
+	LabelBuilder,
 	ModalActionRowComponentBuilder,
 	ModalBuilder,
 	StringSelectMenuBuilder,
@@ -44,6 +45,50 @@ export class KothUIService {
 			.setName('KOTHPlugin.js')
 			.setDescription('KOTH Plugin');
 		return { container, file };
+	}
+
+	public buildEditOrgModal() {
+		const modal = new ModalBuilder()
+			.setCustomId('createNewOrg')
+			.setTitle('New Organization')
+			.addLabelComponents(
+				(lb) =>
+					lb
+						.setLabel('Name')
+						.setTextInputComponent((tb) =>
+							tb
+								.setStyle(TextInputStyle.Short)
+								.setCustomId('orgName')
+								.setPlaceholder('Org name'),
+						),
+				(lb) =>
+					lb
+						.setLabel('Invite Link')
+						.setTextInputComponent((tb) =>
+							tb
+								.setStyle(TextInputStyle.Short)
+								.setCustomId('orgInvite')
+								.setPlaceholder('discord.gg/MyInviteCode'),
+						),
+				(lb) =>
+					lb
+						.setLabel('Owner')
+						.setUserSelectMenuComponent((us) =>
+							us.setCustomId('orgOwner').setPlaceholder('Org Owner'),
+						),
+				(lb) =>
+					lb
+						.setLabel('Admins')
+						.setUserSelectMenuComponent((us) =>
+							us
+								.setCustomId('orgAdmins')
+								.setPlaceholder('Org Admins')
+								.setMaxValues(16)
+								.setRequired(false),
+						),
+			);
+
+		return { modal };
 	}
 
 	public buildCreateNewOrgWindow(formState: NewOrgFormState) {
@@ -190,7 +235,7 @@ export class KothUIService {
 					// .setEmoji('❌'),
 				),
 			);
-		return container;
+		return { container };
 	}
 
 	/**
@@ -213,7 +258,7 @@ export class KothUIService {
 					input,
 				),
 			);
-		return modal;
+		return { modal };
 	}
 
 	/**
@@ -237,7 +282,7 @@ export class KothUIService {
 					input,
 				),
 			);
-		return modal;
+		return { modal };
 	}
 
 	/**
@@ -269,6 +314,6 @@ export class KothUIService {
 					);
 				return row;
 			});
-		return container;
+		return { container };
 	}
 }
