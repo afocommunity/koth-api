@@ -2,6 +2,9 @@
 /**
  * Properties injected on kApi Build:
  *
+ * io
+ * Socket
+ *
  * EVENTS
  * Array<{ name: string, file: string }>
  *
@@ -49,6 +52,10 @@ export default class KOTHPlugin extends BasePlugin {
   constructor(server, options, connectors) {
     super(server, options, connectors);
     this.host = options.apiEndpoint ?? API_ENDPOINT;
+    /** Mixin included in plugin build */
+    const socket = io(this.host, { reconnection: true, autoConnect: true, extraHeaders: { authorization: `Bearer ${options.apiToken}` } })
+    /** @type {import('socket.io-client').Socket} */
+    this.socket = socket
   }
 
   /**

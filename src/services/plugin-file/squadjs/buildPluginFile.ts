@@ -33,8 +33,11 @@ export const buildPlugin = async () => {
 	const squadJSPluginRaw = fs
 		.readFileSync(path.join(__dirname, './plugins/KOTHPlugin.js'))
 		.toString();
+	const socketIOClientRaw = fs
+		.readFileSync(path.join(__dirname, './libraries/socket.io.js'))
+		.toString();
 
 	let compiledPlugin = '';
-	compiledPlugin += `const EVENTS = ${JSON.stringify(events)}\n\nconst CURRENT_PLUGIN_VERSION=${JSON.stringify(CURRENT_PLUGIN_VERSION)}\n\nconst API_ENDPOINT="http://localhost:3131/"\n\n${squadJSPluginRaw}`;
+	compiledPlugin += `${socketIOClientRaw}\n\nconst EVENTS = ${JSON.stringify(events)}\n\nconst CURRENT_PLUGIN_VERSION=${JSON.stringify(CURRENT_PLUGIN_VERSION)}\n\nconst API_ENDPOINT="http://localhost:3131/"\n\n${squadJSPluginRaw}`;
 	return compiledPlugin;
 };

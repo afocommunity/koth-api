@@ -7,6 +7,10 @@
       {
         "include": "./services/plugin-file/squadjs/plugins",
         "outDir": "build/"
+      },
+      {
+        "include": "./services/plugin-file/squadjs/libraries",
+        "outDir": "build/"
       }
     ],
     "watchAssets": true
