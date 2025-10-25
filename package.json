@@ -38,7 +38,7 @@
 		"sequelize": "6.37.7",
 		"sequelize-cli": "6.6.3",
 		"sequelize-typescript": "2.1.6",
-		"socket.io": "4.5.4",
+		"socket.io": "4.6.2",
 		"typeorm": "0.3.27",
 		"umzug": "3.8.2",
 		"zlib-sync": "0.1.10",
