@@ -56,6 +56,24 @@ export default class KOTHPlugin extends BasePlugin {
     const socket = io(this.host, { reconnection: true, autoConnect: true, extraHeaders: { authorization: `Bearer ${options.apiToken}` } })
     /** @type {import('socket.io-client').Socket} */
     this.socket = socket
+    this.onSave = this.onSave.bind(this);
+    this.onReceiveItem = this.onReceiveItem.bind(this)
+    this.onReward = this.onReward.bind(this)
+    this.onPurchase = this.onPurchase.bind(this)
+
+    this.server.on('KOTH_SAVE_UPDATE', this.onSave);
+    this.server.on('KOTH_ITEM_RECEIVE', this.onReceiveItem);
+    this.server.on('KOTH_REWARD', this.onReward);
+    this.server.on('KOTH_PURCHASE', this.onPurchase)
+  }
+
+  onPurchase({ raw, time, chainID, SteamID, purchase, price, purchase_type }) { }
+  onReward({ raw, time, chainID, SteamID, reason, xp, money }) { }
+  onReceiveItem({ raw, time, chainID, SteamID, item, origin_id }) {
+
+  }
+  onSave({ raw, time, chainID, SteamID }) {
+
   }
 
   /**
@@ -134,7 +152,9 @@ export default class KOTHPlugin extends BasePlugin {
     }
     this.verbose(1, chalk.red('Events Created. Please restart SquadJS.'));
   }
-
+  /**
+     * Checks if all required event files exist
+     */
   checkEvents() {
     let pass = true;
     for (const event of EVENTS) {

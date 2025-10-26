@@ -8,7 +8,7 @@ export default {
 			chainID: args[2],
 			SteamID: args[3],
 			item: args[4],
-			origin_id: '$' + args[5],
+			origin_id: args[5],
 		};
 		logParser.emit('KOTH_ITEM_RECEIVE', data);
 	},
